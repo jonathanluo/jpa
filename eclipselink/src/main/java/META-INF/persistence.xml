@@ -5,13 +5,7 @@
         http://www.javavids.com/video/creating-a-jpa-project-with-eclipselink-and-maven.html    
      -->
     <persistence-unit name="jpa-mysql" transaction-type="RESOURCE_LOCAL">
-		<class>org.moonwave.jpa.model.pojo.Employees3</class>
-		<class>org.moonwave.jpa.model.pojo.Employees4</class>
-		<class>org.moonwave.jpa.model.pojo.DeptManager</class>
-		<class>org.moonwave.jpa.model.pojo.DeptManagerLong</class>
 		<class>org.moonwave.jpa.model.pojo.Employee</class>
-		<class>org.moonwave.jpa.model.Employees</class>
-		<class>org.moonwave.jpa.model.Employees2</class>
 		<properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/employees" />
             <property name="javax.persistence.jdbc.user" value="dcfg" />
