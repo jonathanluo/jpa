@@ -32,7 +32,7 @@ public class EmployeeNativeQuery
 		query.setMaxResults(30);
 		List<Employee> list = (List<Employee>) query.getResultList();
 		int i = 0;
-		for (Object emp : list) {
+		for (Employee emp : list) {
 			System.out.println(++i + ": " + emp.toString());
 		}
 	}
