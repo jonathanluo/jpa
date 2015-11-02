@@ -4,7 +4,8 @@ eclipselink project uses mysql employees sample database, here are the steps to 
 1. Download mysql employees sample database
 https://launchpad.net/test-db/
 Locate Downloads in the right pane
-download employees-db-full-1.0.6  (https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2)
+download employees-db-full-1.0.6
+(https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2)
 
 2. Install mysql employees sample database
 shell> tar -xjf $HOME/Downloads/employees_db-full-1.0.6.tar.bz2
