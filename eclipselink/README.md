@@ -1,3 +1,4 @@
+<pre>
 eclipselink project uses mysql employees sample database, here are the steps to setup and configure mysql employees sample database:
 
 1. Download mysql employees sample database
@@ -18,4 +19,4 @@ shell> mysql -u root -p
 create user dcfg and grant full access to dcfg
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'dcfg'@'localhost' IDENTIFIED BY 'dconfig' WITH GRANT OPTION;
 
-
+</pre>
