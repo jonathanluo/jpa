@@ -1,5 +1,6 @@
 <pre>
-eclipselink project uses mysql employees sample database, here are the steps to setup and configure mysql employees sample database:
+eclipselink project uses mysql employees sample database, here are the steps to setup 
+and configure mysql employees sample database:
 
 1. Download mysql employees sample database
 https://launchpad.net/test-db/
