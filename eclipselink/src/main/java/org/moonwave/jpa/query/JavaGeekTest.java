@@ -11,8 +11,13 @@ import com.thejavageek.jpa.entities.Bike;
 import com.thejavageek.jpa.entities.Computer;
 
 /**
- * http://www.thejavageek.com/2014/09/25/jpa-caching-example 
- *
+ * http://www.thejavageek.com/2014/09/25/jpa-caching-example
+ * After run this test program, verify using
+ *  
+ * select * from id_gen;
+ * select * from ANIMAL;
+ * select * from BIKE;
+ * select * from COMPUTER;
  */
 public class JavaGeekTest {
 
