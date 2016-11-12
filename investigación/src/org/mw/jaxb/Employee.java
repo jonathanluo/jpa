@@ -47,7 +47,7 @@ public class Employee {
     }
 
     @XmlElement
-    public float getSalary() {
+    public float getSalary() { // automatically handle data type conversion
         return salary;
     }
 
