@@ -13,46 +13,9 @@ public class EnrollmentTest {
 
     static final String BLANK = "";
 
-    public void displayMethods(Object obj) {
+    public void handleFields(Object ao) {
+        Object objectValue;
         try {
-            Method[] methods = obj.getClass().getMethods();
-            for (Method method : methods) {
-                // checks if MethodInfo annotation is present for the method
-                if (method.isAnnotationPresent(AuditMethod.class)) {
-                    try {
-                        // iterates all the annotations available in the method
-                        for (Annotation anno : method.getDeclaredAnnotations()) {
-                            System.out.println("Annotation in Method "  + method + " : " + anno);
-                        }
-                        AuditMethod m = method.getAnnotation(AuditMethod.class);
-                        System.out.println("    method=" + m);
-                        System.out.println("    alias=" + m.alias());
-                        System.out.println("    priority=" + m.priority());
-                        System.out.println("    concurrent=" + m.concurrent());
-
-                        // get field value
-                        AuditMethod am = (AuditMethod) method.getAnnotation(AuditMethod.class);
-                        if (am != null) {
-                            try {
-                                Object objectValue = method.invoke(obj);
-                                System.out.println("    AuditMethod value='" + objectValue + "'");
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                //ignore;
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void displayFields(Object ao) {
-    	Object objectValue;
-    	try {
             Field[] fields = ao.getClass().getDeclaredFields();
             for (Field field : fields) {
                 if (field.isAnnotationPresent(AuditField.class)) {
@@ -66,9 +29,45 @@ public class EnrollmentTest {
                         System.out.println("    columnIdx=" + f.columnIndex());
                         System.out.println("    target=" + f.target());
                         // get field value
-                        field.setAccessible(true);
+                        field.setAccessible(true); // must set this
                         objectValue = field.get(ao);
+                        System.out.println("    fieldName=" + field.getName());
                         System.out.println("    field value='" + objectValue + "'");
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleMethods(Object obj) {
+        try {
+            Method[] methods = obj.getClass().getMethods();
+            for (Method m : methods) {
+                // checks if MethodInfo annotation is present for the method
+                if (m.isAnnotationPresent(AuditMethod.class)) {
+                    try {
+                        // iterates all the annotations available in the method
+                        for (Annotation anno : m.getDeclaredAnnotations()) {
+                            System.out.println("Annotation in Method "  + m + " : " + anno);
+                        }
+                        AuditMethod am =  m.getAnnotation(AuditMethod.class);
+                        System.out.println("    am=" + am);
+                        System.out.println("    alias=" + am.alias());
+                        System.out.println("    priority=" + am.priority());
+                        System.out.println("    concurrent=" + am.concurrent());
+
+                        // call method
+                        try {
+                            Object objectValue = m.invoke(obj);
+                            System.out.println("    method=" + m.getName());
+                            System.out.println("    AuditMethod value='" + objectValue + "'");
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            //ignore;
+                        }
                     } catch (Throwable ex) {
                         ex.printStackTrace();
                     }
@@ -106,10 +105,11 @@ public class EnrollmentTest {
         enrollment.setId(101);
         enrollment.setFirstname("Jason");
         enrollment.setLastname("Smith");
-        enrollment.setNote("Notes: 1) 2) 3)");
         enrollment.setComment("Enrolled in 2016");
-        test.displayMethods(enrollment);
+        enrollment.setNote("Notes: 1) 2) 3)");
+
+        test.handleFields(enrollment);
         System.out.println("=====================================================");
-        test.displayFields(enrollment);
+        test.handleMethods(enrollment);
     }
 }
