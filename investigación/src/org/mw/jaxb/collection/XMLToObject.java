@@ -10,7 +10,7 @@ import org.mw.util.FileUtil;
   
 /**
  * http://www.javatpoint.com/jaxb-tutorial
- *
+ * http://www.javatpoint.com/jaxb-unmarshalling-example
  */
 public class XMLToObject {
 
