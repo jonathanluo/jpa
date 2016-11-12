@@ -17,9 +17,15 @@ public class ObjectToXml {
         Marshaller marshallerObj = contextObj.createMarshaller();
         marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-        Employee emp1=new Employee(1,"Vimal Jaiswal",50000);
+        Employee emp1=new Employee(1, "Vimal Jaiswal", 50000);
 
         marshallerObj.marshal(emp1, new FileOutputStream("employee.xml"));
 
+        // =====================================================================
+        // http://fahdshariff.blogspot.com/2013/05/jaxb-marshallingunmarshalling-example.html
+        Employee emp2=new Employee(102,"Joson Smith", 49997);
+        JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
+        String xmlString = jaxbUtil.marshal(emp2);
+        System.out.println( xmlString);
     }
 }

@@ -24,6 +24,13 @@ public class XMLToObject {
             Employee e=(Employee) jaxbUnmarshaller.unmarshal(file);
             System.out.println(e.getId()+" "+e.getName()+" "+e.getSalary());
 
+            // =================================================================
+            // http://fahdshariff.blogspot.com/2013/05/jaxb-marshallingunmarshalling-example.html
+            String xmlString = FileUtil.getContent("employee.xml");
+            JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
+            Employee e2 = (Employee) jaxbUtil.unmarshal(Employee.class, xmlString);
+            System.out.println("\n============================================");
+            System.out.println(e2.getId()+" "+e2.getName()+" "+e2.getSalary());
         } catch (JAXBException e) {
             e.printStackTrace(); 
         }
