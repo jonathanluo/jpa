@@ -1,6 +1,7 @@
-package org.mw.jaxb;
+package org.mw.jaxb.collection;
 
-import java.io.File;  
+import java.io.File;
+
 import javax.xml.bind.JAXBContext;  
 import javax.xml.bind.JAXBException;  
 import javax.xml.bind.Unmarshaller;
@@ -15,14 +16,15 @@ public class XMLToObject {
 
     public static void main(String[] args) {
         try {
-            File file = new File("employee.xml");
-            FileUtil.printFile("employee.xml");
+            File file = new File("question.xml");
+            FileUtil.printFile("question.xml");
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(Employee.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Question.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Employee e=(Employee) jaxbUnmarshaller.unmarshal(file);
-            System.out.println(e.getId()+" "+e.getName()+" "+e.getSalary());
+            Question e=(Question) jaxbUnmarshaller.unmarshal(file);
+
+            System.out.println(e);
 
         } catch (JAXBException e) {
             e.printStackTrace(); 
