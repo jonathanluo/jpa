@@ -23,7 +23,7 @@ public class FutureDemo {
     public static void main(String args[]) throws InterruptedException, ExecutionException {
         FactorialCalculator task = new FactorialCalculator(10);
         System.out.println("Submitting Task ...");
-        Future future = threadpool.submit(task);
+        Future<Long> future = threadpool.submit(task);
         System.out.println("Task is submitted");
         while (!future.isDone()) {
             System.out.println("Task is not completed yet....");
@@ -34,17 +34,19 @@ public class FutureDemo {
         System.out.println("Factorial of 1000000 is : " + factorial);
         threadpool.shutdown();
     }
-    
-    private static class FactorialCalculator implements Callable {
+
+    private static class FactorialCalculator implements Callable<Long> {
         private final int number;
         public FactorialCalculator(int number) {
             this.number = number;
         }
 
-        @Override public Long call() {
+        @Override 
+        public Long call() {
             long output = 0;
             try {
                 output = factorial(number);
+                System.out.println("   factorial(" + number + ")");
             }catch (InterruptedException ex) {
                 Logger.getLogger(FutureDemo.class.getName()).log(Level.SEVERE, null, ex);
             }
