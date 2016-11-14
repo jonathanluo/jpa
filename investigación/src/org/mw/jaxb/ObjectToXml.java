@@ -23,7 +23,7 @@ public class ObjectToXml {
 
         // =====================================================================
         // http://fahdshariff.blogspot.com/2013/05/jaxb-marshallingunmarshalling-example.html
-        Employee emp2=new Employee(102,"Joson Smith", 49997);
+        Employee emp2=new Employee(102,"Jason Smith", 49997);
         JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
         String xmlString = jaxbUtil.marshal(emp2);
         System.out.println( xmlString);
