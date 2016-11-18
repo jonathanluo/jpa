@@ -19,7 +19,8 @@ import javax.xml.stream.XMLStreamReader;
 public class JaxbUtil<T> {
 
     /**
-     * Marshalling: To convert a Book object into an XML string:
+     * Marshal: Convert a Java object to XML string
+     *
      * Example:
      *   Employee emp=new Employee(102,"Jason Smith", 49997);
      *   JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
@@ -38,7 +39,8 @@ public class JaxbUtil<T> {
     }
 
     /**
-     * Unmarshalling: To convert an XML string into an object of class Book:
+     * Unmarshal: convert a XML string into a Java object
+     *
      * Example:
      *   String xmlString = FileUtil.getContent("employee.xml");
      *   JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
