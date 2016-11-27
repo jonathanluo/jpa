@@ -78,6 +78,28 @@ public class AuditUtil {
     }
 
     /**
+     * Get value from a specified audit field
+     *
+     * @param ao          annotated audit object
+     * @param auditField audit field name
+     */
+    public Object getValueFromAuditField(Object ao, String auditField) {
+        Object val = BLANK;
+        for (Field f : ao.getClass().getDeclaredFields()) {
+            if (auditField.equals(f.getName())) {
+                try {
+                    f.setAccessible(true); // must set this
+                    val = f.get(ao);
+                    break;
+                } catch (IllegalAccessException e) {
+                    //ignore;
+                }
+            }
+        }
+        return val;
+    }
+
+    /**
      * Get value from a specified audit method
      *
      * @param ao          annotated audit object
@@ -86,8 +108,7 @@ public class AuditUtil {
     public Object getValueFromAuditMethod(Object ao, String auditMethod) {
         Object val = BLANK;
         for (Method m : ao.getClass().getMethods()) {
-            AuditMethod am = (AuditMethod) m.getAnnotation(AuditMethod.class);
-            if ((am != null) && auditMethod.equals(m.getName())) {
+            if (auditMethod.equals(m.getName())) {
                 try {
                     val = m.invoke(ao);
                     break;

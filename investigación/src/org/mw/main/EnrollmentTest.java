@@ -18,5 +18,6 @@ public class EnrollmentTest {
         System.out.println("=====================================================");
         auditUtil.handleMethods(enrollment);
         System.out.println("getlastName: " + auditUtil.getValueFromAuditMethod(enrollment, "getLastname"));
+        System.out.println("comment: " + auditUtil.getValueFromAuditField(enrollment, "comment"));
     }
 }
