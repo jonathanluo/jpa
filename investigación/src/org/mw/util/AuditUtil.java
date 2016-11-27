@@ -80,7 +80,7 @@ public class AuditUtil {
     /**
      * Get value from a specified audit method
      *
-     * @param ao          annotation audit object
+     * @param ao          annotated audit object
      * @param auditMethod audit method name
      */
     public Object getValueFromAuditMethod(Object ao, String auditMethod) {
@@ -90,6 +90,7 @@ public class AuditUtil {
             if ((am != null) && auditMethod.equals(m.getName())) {
                 try {
                     val = m.invoke(ao);
+                    break;
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     //ignore;
                 }
