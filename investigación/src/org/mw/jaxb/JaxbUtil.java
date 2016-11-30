@@ -125,6 +125,7 @@ public class JaxbUtil<T> {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     public static <T> T unmarshal(Class<T> t, Class subClazz, final String xml) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(t, subClazz);
