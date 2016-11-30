@@ -81,6 +81,29 @@ public class JaxbUtil<T> {
     }
 
     /**
+     * Identical implementation as the above except that it resolves fortify warning 
+     *
+     * @param clazz
+     * @param xml
+     * @return
+     * @throws JAXBException
+     */
+    @SuppressWarnings("unchecked")
+    public T unmarshal2(Class<T> clazz, final String xml) throws JAXBException {
+        try {
+            Unmarshaller unmarshaller = JAXBContext.newInstance(clazz).createUnmarshaller();
+            XMLInputFactory xmlif = XMLInputFactory.newFactory();
+            xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+            xmlif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+            XMLStreamReader xmlsr = xmlif.createXMLStreamReader(new StringReader(xml));
+            return (T) unmarshaller.unmarshal(xmlsr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+    /**
      * 
      * @param xml
      * @param t
