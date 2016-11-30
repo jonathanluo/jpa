@@ -57,7 +57,10 @@ public class JaxbUtil<T> {
      *   Employee e = (Employee) jaxbUtil.unmarshal(Employee.class, xmlString);
      *
      * Note:
-     *   JaxbUtil.java, line 72 unmarshal(new StringReader(xml)) (Fortify: XML External Entity Injection)
+     *   Fortify warning (high) line 72 unmarshal(new StringReader(xml)) (XML External Entity Injection)
+     *   while line 96 - 97 does not
+     *       XMLStreamReader xmlsr = xmlif.createXMLStreamReader(new StringReader(xml));
+     *       return t.cast(unmarshaller.unmarshal(xmlsr));
      *
      * @param t
      * @param xml
