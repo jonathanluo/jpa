@@ -55,6 +55,10 @@ public class JaxbUtil<T> {
      *   String xmlString = FileUtil.getContent("employee.xml");
      *   JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
      *   Employee e = (Employee) jaxbUtil.unmarshal(Employee.class, xmlString);
+     *
+     * Note:
+     *   JaxbUtil.java, line 72 unmarshal(new StringReader(xml)) (Fortify: XML External Entity Injection)
+     *
      * @param t
      * @param xml
      * @return
@@ -73,6 +77,12 @@ public class JaxbUtil<T> {
         return null;
     }
 
+    /**
+     * 
+     * @param xml
+     * @param t
+     * @return
+     */
     public static <T> T unmarshal(final String xml, Class<T> t) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(t);
