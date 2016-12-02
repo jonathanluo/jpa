@@ -1,8 +1,14 @@
 package org.mw.entity;
 
+import java.util.List;
+
+import org.mw.annotation.AuditClass;
+import org.mw.annotation.AuditCollection;
 import org.mw.annotation.AuditField;
 import org.mw.annotation.AuditMethod;
+import static org.mw.annotation.AuditCollection.Mapping.ONE_TO_MANY;
 
+@AuditClass(name="enrollment")
 public class Enrollment {
 
     @AuditField(id=true)
@@ -18,6 +24,12 @@ public class Enrollment {
 
     @AuditField(columnName="Feedback", columnIndex=3, id=false, target={"weblogic", "tomcat"})
     String comment;
+
+    @AuditCollection(mapping = ONE_TO_MANY)
+    List<Phone> phones;
+
+    @AuditCollection
+    List<Address> addresses;
 
     @AuditMethod(alias="get surname", priority=2)
     public String getFirstname() {

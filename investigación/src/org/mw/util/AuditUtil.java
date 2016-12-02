@@ -5,9 +5,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.mw.annotation.AuditClass;
 import org.mw.annotation.AuditField;
 import org.mw.annotation.AuditMethod;
 
+/**
+ * Sample test code: EnrollmentTest.java
+ *
+ */
 public class AuditUtil {
 
     static final String BLANK = "";
@@ -15,6 +20,10 @@ public class AuditUtil {
     public void handleFields(Object ao) {
         Object objectValue;
         try {
+            AuditClass auditClass = ao.getClass().getAnnotation(AuditClass.class);
+            if (auditClass != null) {
+                System.out.println("    auditClass.name=" + auditClass.name());
+            }
             Field[] fields = ao.getClass().getDeclaredFields();
             for (Field field : fields) {
                 if (field.isAnnotationPresent(AuditField.class)) {
