@@ -59,21 +59,24 @@ public class AuditUtil {
      * @param field an AuditField object
      */
     public void handleNormalField(Object ao, Field field) {
-        Object objectValue;
+        Object objectValue = BLANK;
         try {
-            for (Annotation anno : field.getDeclaredAnnotations()) {
-                System.out.println("Annotation in field "  + field + " : " + anno);
-            }
             AuditField f = field.getAnnotation(AuditField.class);
-            System.out.println("    field=" + f);
-            System.out.println("    columnName=" + f.columnName());
-            System.out.println("    columnIdx=" + f.columnIndex());
-            System.out.println("    target=" + f.target());
-            // get field value
-            field.setAccessible(true); // must set this
-            objectValue = field.get(ao);
-            System.out.println("    fieldName=" + field.getName());
-            System.out.println("    field value='" + objectValue + "'");
+            System.out.println("    annotation=" + f);
+            if (f.target().length > 0) {
+                System.out.println("    target=");
+                for (String target : f.target()) {
+                    System.out.println("        " + target);
+                }
+            }
+            if (!f.fieldMethod().isEmpty()) {
+                objectValue = getValueFromAuditMethod(ao, f.fieldMethod());
+            } else {
+                // get field value
+                field.setAccessible(true); // must set this
+                objectValue = field.get(ao);
+            }
+            System.out.println("    fieldName=" + field.getName() + ", value='" + objectValue + "'");
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -85,7 +88,7 @@ public class AuditUtil {
      * @param field an AuditCollection field object
      */
     @SuppressWarnings("rawtypes")
-	public void handleCollectionField(Object ao, Field field) {
+    public void handleCollectionField(Object ao, Field field) {
         Object objectValue;
         Collection collection = null;
         try {
@@ -102,8 +105,6 @@ public class AuditUtil {
                     handleFields(obj);
                 }
             }
-            System.out.println("    fieldName=" + field.getName());
-            System.out.println("    field value='" + objectValue + "'");
         } catch (Throwable ex) {
             ex.printStackTrace();
         }

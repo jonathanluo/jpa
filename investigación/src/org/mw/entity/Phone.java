@@ -3,7 +3,7 @@ package org.mw.entity;
 import org.mw.annotation.AuditClass;
 import org.mw.annotation.AuditField;
 
-@AuditClass(name="phone")
+@AuditClass(name="phone", idMethod="getId")
 public class Phone {
 
     public enum PhoneType {HOME,
@@ -11,12 +11,12 @@ public class Phone {
                            WORK,
                            FAX};
 
-    @AuditField(id=true)
     int id;
 
     @AuditField
     String phone;
 
+    @AuditField
     PhoneType phoneType;
 
     public Phone() {

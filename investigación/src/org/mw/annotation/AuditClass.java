@@ -24,4 +24,10 @@ public @interface AuditClass {
      */
     public String[] target() default {};
 
+    /**
+     * The name of method which returns the unique id of an entity object
+     *
+     * @return idMethod
+     */
+    public String idMethod() default "";
 }

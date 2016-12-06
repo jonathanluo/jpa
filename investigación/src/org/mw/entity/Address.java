@@ -4,14 +4,14 @@ import org.mw.annotation.AuditClass;
 import org.mw.annotation.AuditField;
 import org.mw.annotation.AuditMethod;
 
-@AuditClass(name="address")
+@AuditClass(name="address", idMethod="getId")
 public class Address {
 
     public enum AddressType {HOME,
                              WORK,
                              ALTERNATIVE};
 
-    @AuditField(id=true)
+    @AuditField(fieldMethod="getAddress") // override field value
     int id;
 
     String street;
@@ -22,6 +22,7 @@ public class Address {
 
     String zip;
 
+    @AuditField
     AddressType addressType;
 
     public Address() {

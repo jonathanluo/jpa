@@ -15,11 +15,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface AuditField {
 
-    public String columnName()  default "";
+    public String columnName()  default ""; // column name to be displayed, if not presents use field name
 
     public int    columnIndex() default 0;
 
-    public boolean id() default true;
+    public boolean id() default false; // true if this field is id
 
-    public String[] target() default {};
+    public String[] target() default {}; // audit target for specified action code
+
+    public String fieldMethod()  default ""; // if presents, use this method to override default field value 
 }
