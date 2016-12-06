@@ -1,5 +1,6 @@
 package org.mw.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mw.annotation.AuditClass;
@@ -73,5 +74,26 @@ public class Enrollment {
         this.lastname = lastname;
     }
 
-    
+    public List<Phone> getPhones() {
+        if (phones == null) {
+            phones = new ArrayList<>();
+        }
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
+    public List<Address> getAddresses() {
+        if (addresses == null) {
+            addresses = new ArrayList<>();
+        }
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
 }

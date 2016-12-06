@@ -24,6 +24,17 @@ public class Address {
 
     AddressType addressType;
 
+    public Address() {
+    }
+
+    public Address(String street, String city, String state, String zip, AddressType addressType) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.addressType = addressType;
+    }
+
     public int getId() {
         return id;
     }

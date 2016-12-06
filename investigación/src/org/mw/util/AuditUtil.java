@@ -4,8 +4,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import org.mw.annotation.AuditClass;
+import org.mw.annotation.AuditCollection;
 import org.mw.annotation.AuditField;
 import org.mw.annotation.AuditMethod;
 
@@ -18,36 +23,89 @@ public class AuditUtil {
     static final String BLANK = "";
 
     public void handleFields(Object ao) {
-        Object objectValue;
         try {
             AuditClass auditClass = ao.getClass().getAnnotation(AuditClass.class);
+            System.out.println("====================================================");
             if (auditClass != null) {
+                System.out.println("    ao.getClass().getName()=" + ao.getClass().getName());
                 System.out.println("    auditClass.name=" + auditClass.name());
             }
             Field[] fields = ao.getClass().getDeclaredFields();
+            // get list of normal audit fields, audit collection fields
+            List<Field> auditFields = new ArrayList<>();
+            List<Field> auditCollectionFields = new ArrayList<>();
+
             for (Field field : fields) {
                 if (field.isAnnotationPresent(AuditField.class)) {
-                    try {
-                        for (Annotation anno : field.getDeclaredAnnotations()) {
-                            System.out.println("Annotation in field "  + field + " : " + anno);
-                        }
-                        AuditField f = field.getAnnotation(AuditField.class);
-                        System.out.println("    field=" + f);
-                        System.out.println("    columnName=" + f.columnName());
-                        System.out.println("    columnIdx=" + f.columnIndex());
-                        System.out.println("    target=" + f.target());
-                        // get field value
-                        field.setAccessible(true); // must set this
-                        objectValue = field.get(ao);
-                        System.out.println("    fieldName=" + field.getName());
-                        System.out.println("    field value='" + objectValue + "'");
-                    } catch (Throwable ex) {
-                        ex.printStackTrace();
-                    }
+                    auditFields.add(field);
+                } else if (field.isAnnotationPresent(AuditCollection.class)) {
+                    auditCollectionFields.add(field);
                 }
+            }
+            for (Field f : auditFields) {
+                handleNormalField(ao, f);
+            }
+            for (Field f : auditCollectionFields) {
+                handleCollectionField(ao, f);
             }
         } catch (SecurityException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     * @param ao
+     * @param field an AuditField object
+     */
+    public void handleNormalField(Object ao, Field field) {
+        Object objectValue;
+        try {
+            for (Annotation anno : field.getDeclaredAnnotations()) {
+                System.out.println("Annotation in field "  + field + " : " + anno);
+            }
+            AuditField f = field.getAnnotation(AuditField.class);
+            System.out.println("    field=" + f);
+            System.out.println("    columnName=" + f.columnName());
+            System.out.println("    columnIdx=" + f.columnIndex());
+            System.out.println("    target=" + f.target());
+            // get field value
+            field.setAccessible(true); // must set this
+            objectValue = field.get(ao);
+            System.out.println("    fieldName=" + field.getName());
+            System.out.println("    field value='" + objectValue + "'");
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     * @param ao
+     * @param field an AuditCollection field object
+     */
+    @SuppressWarnings("rawtypes")
+	public void handleCollectionField(Object ao, Field field) {
+        Object objectValue;
+        Collection collection = null;
+        try {
+            AuditCollection f = field.getAnnotation(AuditCollection.class);
+            System.out.println("    field=" + f);
+            // get field value
+            field.setAccessible(true); // must set this
+            objectValue = field.get(ao);
+            if (objectValue instanceof Collection) {
+                collection = (Collection) objectValue;
+                Iterator it = collection.iterator();
+                while (it.hasNext()) {
+                    Object obj = it.next();
+                    handleFields(obj);
+                }
+            }
+            System.out.println("    fieldName=" + field.getName());
+            System.out.println("    field value='" + objectValue + "'");
+        } catch (Throwable ex) {
+            ex.printStackTrace();
         }
     }
 

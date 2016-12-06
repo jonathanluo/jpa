@@ -19,6 +19,14 @@ public class Phone {
 
     PhoneType phoneType;
 
+    public Phone() {
+    }
+
+    public Phone(String phone, PhoneType phoneType) {
+        this.phone = phone;
+        this.phoneType = phoneType;
+    }
+
     public int getId() {
         return id;
     }
