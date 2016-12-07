@@ -29,8 +29,8 @@ public class EnrollmentTest {
 
         AuditUtil auditUtil = new AuditUtil();
         auditUtil.handleFields(enrollment);
-        auditUtil.handleMethods(enrollment);
-        System.out.println("getlastName: " + auditUtil.getValueFromMethod(enrollment, "getLastname"));
-        System.out.println("comment: " + auditUtil.getValueFromAuditField(enrollment, "comment"));
+//        auditUtil.handleMethods(enrollment);
+//        System.out.println("getlastName: " + auditUtil.getValueFromMethod(enrollment, "getLastname"));
+//        System.out.println("comment: " + auditUtil.getValueFromAuditField(enrollment, "comment"));
     }
 }

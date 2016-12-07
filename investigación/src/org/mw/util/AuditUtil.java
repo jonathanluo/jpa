@@ -38,6 +38,13 @@ public class AuditUtil {
             List<Field> auditFields = new ArrayList<>();
             List<Field> auditCollectionFields = new ArrayList<>();
 
+            Method[] methods = ao.getClass().getMethods();
+            for (Method m : methods) {
+                if (m.isAnnotationPresent(AuditMethod.class)) {
+                	Object objectValue = getValueFromMethod(ao, m.getName());
+                    System.out.println("        ==> '" + objectValue + "'");
+                }
+            }
             for (Field field : fields) {
                 if (field.isAnnotationPresent(AuditField.class)) {
                     auditFields.add(field);
@@ -151,13 +158,13 @@ public class AuditUtil {
     /**
      * Get value from a specified audit field
      *
-     * @param ao          annotated audit object
-     * @param auditField audit field name
+     * @param ao        annotated audit object
+     * @param fieldName field name
      */
-    public Object getValueFromAuditField(Object ao, String auditField) {
+    public Object getValueFromField(Object ao, String fieldName) {
         Object val = BLANK;
         for (Field f : ao.getClass().getDeclaredFields()) {
-            if (auditField.equals(f.getName())) {
+            if (fieldName.equals(f.getName())) {
                 try {
                     f.setAccessible(true); // must set this
                     val = f.get(ao);
@@ -174,13 +181,14 @@ public class AuditUtil {
      * Get value from a specified audit method
      *
      * @param ao          annotated audit object
-     * @param auditMethod audit method name
+     * @param methodName audit method name
      */
-    public Object getValueFromMethod(Object ao, String auditMethod) {
+    public Object getValueFromMethod(Object ao, String methodName) {
         Object val = BLANK;
         for (Method m : ao.getClass().getMethods()) {
-            if (auditMethod.equals(m.getName())) {
+            if (methodName.equals(m.getName())) {
                 try {
+                    System.out.println("    calling method=" + m.getName());
                     val = m.invoke(ao);
                     break;
                 } catch (IllegalAccessException | InvocationTargetException e) {
