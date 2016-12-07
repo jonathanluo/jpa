@@ -27,8 +27,11 @@ public class AuditUtil {
             AuditClass auditClass = ao.getClass().getAnnotation(AuditClass.class);
             System.out.println("====================================================");
             if (auditClass != null) {
-                System.out.println("    ao.getClass().getName()=" + ao.getClass().getName());
-                System.out.println("    auditClass.name=" + auditClass.name());
+                System.out.println("ao.getClass().getName()=" + ao.getClass().getName());
+                System.out.println("auditClass.name=" + auditClass.name());
+                if (!auditClass.idMethod().isEmpty()) {
+                	System.out.println("id=" + getValueFromMethod(ao, auditClass.idMethod()));
+                }
             }
             Field[] fields = ao.getClass().getDeclaredFields();
             // get list of normal audit fields, audit collection fields
@@ -62,7 +65,7 @@ public class AuditUtil {
         Object objectValue = BLANK;
         try {
             AuditField f = field.getAnnotation(AuditField.class);
-            System.out.println("    annotation=" + f);
+            System.out.println("    " + f);
             if (f.target().length > 0) {
                 System.out.println("    target=");
                 for (String target : f.target()) {
@@ -70,13 +73,13 @@ public class AuditUtil {
                 }
             }
             if (!f.fieldMethod().isEmpty()) {
-                objectValue = getValueFromAuditMethod(ao, f.fieldMethod());
+                objectValue = getValueFromMethod(ao, f.fieldMethod());
             } else {
                 // get field value
                 field.setAccessible(true); // must set this
                 objectValue = field.get(ao);
             }
-            System.out.println("    fieldName=" + field.getName() + ", value='" + objectValue + "'");
+            System.out.println("    fieldName=" + field.getName() + ", value='" + objectValue + "'\n");
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -173,7 +176,7 @@ public class AuditUtil {
      * @param ao          annotated audit object
      * @param auditMethod audit method name
      */
-    public Object getValueFromAuditMethod(Object ao, String auditMethod) {
+    public Object getValueFromMethod(Object ao, String auditMethod) {
         Object val = BLANK;
         for (Method m : ao.getClass().getMethods()) {
             if (auditMethod.equals(m.getName())) {

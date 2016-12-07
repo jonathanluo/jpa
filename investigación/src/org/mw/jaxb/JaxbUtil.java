@@ -56,12 +56,6 @@ public class JaxbUtil<T> {
      *   JaxbUtil jaxbUtil = new JaxbUtil<Employee>();
      *   Employee e = (Employee) jaxbUtil.unmarshal(Employee.class, xmlString);
      *
-     * Note:
-     *   Fortify warning (high) line 72 unmarshal(new StringReader(xml)) (XML External Entity Injection)
-     *   while line 96 - 97 does not
-     *       XMLStreamReader xmlsr = xmlif.createXMLStreamReader(new StringReader(xml));
-     *       return t.cast(unmarshaller.unmarshal(xmlsr));
-     *
      * @param t
      * @param xml
      * @return
@@ -72,7 +66,7 @@ public class JaxbUtil<T> {
         try {
             return (T) JAXBContext.newInstance(clazz)
                        .createUnmarshaller()
-                       .unmarshal(new StringReader(xml));
+                       .unmarshal(new StringReader(xml)); // Fortify warning: unmarshal(new StringReader(xml)) (XML External Entity Injection)
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.log(Level.SEVERE, null, e);
@@ -81,7 +75,7 @@ public class JaxbUtil<T> {
     }
 
     /**
-     * Identical implementation as the above except that it resolves fortify warning 
+     * Identical implementation as unmarshal method except that it eliminates fortify warning 
      *
      * @param clazz
      * @param xml
