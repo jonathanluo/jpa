@@ -81,19 +81,10 @@ public class Enrollment {
         return phones;
     }
 
-    public void setPhones(List<Phone> phones) {
-        this.phones = phones;
-    }
-
     public List<Address> getAddresses() {
         if (addresses == null) {
             addresses = new ArrayList<>();
         }
         return addresses;
     }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
 }

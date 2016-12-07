@@ -27,10 +27,10 @@ public class AuditUtil {
             AuditClass auditClass = ao.getClass().getAnnotation(AuditClass.class);
             System.out.println("====================================================");
             if (auditClass != null) {
-                System.out.println("ao.getClass().getName()=" + ao.getClass().getName());
-                System.out.println("auditClass.name=" + auditClass.name());
+                System.out.println(auditClass);
+                System.out.println("public class " + ao.getClass().getName());
                 if (!auditClass.idMethod().isEmpty()) {
-                	System.out.println("id=" + getValueFromMethod(ao, auditClass.idMethod()));
+                    System.out.println("        ==> id=" + getValueFromMethod(ao, auditClass.idMethod()));
                 }
             }
             Field[] fields = ao.getClass().getDeclaredFields();
@@ -41,7 +41,7 @@ public class AuditUtil {
             Method[] methods = ao.getClass().getMethods();
             for (Method m : methods) {
                 if (m.isAnnotationPresent(AuditMethod.class)) {
-                	Object objectValue = getValueFromMethod(ao, m.getName());
+                    Object objectValue = getValueFromMethod(ao, m.getName());
                     System.out.println("        ==> '" + objectValue + "'");
                 }
             }
@@ -103,7 +103,8 @@ public class AuditUtil {
         Collection collection = null;
         try {
             AuditCollection f = field.getAnnotation(AuditCollection.class);
-            System.out.println("    field=" + f);
+            System.out.println("    " + f);
+            System.out.println("    fieldName=" + field.getName());
             // get field value
             field.setAccessible(true); // must set this
             objectValue = field.get(ao);
