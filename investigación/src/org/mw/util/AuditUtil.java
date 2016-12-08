@@ -68,7 +68,7 @@ public class AuditUtil {
      * @param ao
      * @param field an AuditField object
      */
-    public void handleNormalField(Object ao, Field field) {
+    private void handleNormalField(Object ao, Field field) {
         Object objectValue = BLANK;
         try {
             AuditField f = field.getAnnotation(AuditField.class);
@@ -98,7 +98,7 @@ public class AuditUtil {
      * @param field an AuditCollection field object
      */
     @SuppressWarnings("rawtypes")
-    public void handleCollectionField(Object ao, Field field) {
+    private void handleCollectionField(Object ao, Field field) {
         Object objectValue;
         Collection collection = null;
         try {
@@ -121,6 +121,56 @@ public class AuditUtil {
         }
     }
 
+
+    /**
+     * Get value from a specified audit field
+     *
+     * @param ao        annotated audit object
+     * @param fieldName field name
+     */
+    private Object getValueFromField(Object ao, String fieldName) {
+        Object val = BLANK;
+        for (Field f : ao.getClass().getDeclaredFields()) {
+            if (fieldName.equals(f.getName())) {
+                try {
+                    f.setAccessible(true); // must set this
+                    val = f.get(ao);
+                    break;
+                } catch (IllegalAccessException e) {
+                    //ignore;
+                }
+            }
+        }
+        return val;
+    }
+
+    /**
+     * Get value from a specified audit method
+     *
+     * @param ao          annotated audit object
+     * @param methodName audit method name
+     */
+    private Object getValueFromMethod(Object ao, String methodName) {
+        Object val = BLANK;
+        for (Method m : ao.getClass().getMethods()) {
+            if (methodName.equals(m.getName())) {
+                try {
+                    System.out.println("    calling method=" + m.getName());
+                    val = m.invoke(ao);
+                    break;
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    //ignore;
+                }
+            }
+        }
+        return val;
+    }
+
+    /**
+     * This method not being used
+     *
+     * @param obj
+     */
     public void handleMethods(Object obj) {
         try {
             Method[] methods = obj.getClass().getMethods();
@@ -155,49 +205,4 @@ public class AuditUtil {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Get value from a specified audit field
-     *
-     * @param ao        annotated audit object
-     * @param fieldName field name
-     */
-    public Object getValueFromField(Object ao, String fieldName) {
-        Object val = BLANK;
-        for (Field f : ao.getClass().getDeclaredFields()) {
-            if (fieldName.equals(f.getName())) {
-                try {
-                    f.setAccessible(true); // must set this
-                    val = f.get(ao);
-                    break;
-                } catch (IllegalAccessException e) {
-                    //ignore;
-                }
-            }
-        }
-        return val;
-    }
-
-    /**
-     * Get value from a specified audit method
-     *
-     * @param ao          annotated audit object
-     * @param methodName audit method name
-     */
-    public Object getValueFromMethod(Object ao, String methodName) {
-        Object val = BLANK;
-        for (Method m : ao.getClass().getMethods()) {
-            if (methodName.equals(m.getName())) {
-                try {
-                    System.out.println("    calling method=" + m.getName());
-                    val = m.invoke(ao);
-                    break;
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    //ignore;
-                }
-            }
-        }
-        return val;
-    }
-
 }
