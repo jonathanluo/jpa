@@ -33,7 +33,8 @@ public class MongoDBJDBC {
          System.out.println("Connect to database successfully");
 //         boolean auth = db.authenticate(myUserName, myPassword);
 //         System.out.println("Authentication: "+auth);
-
+         DBCollection coll = db.createCollection("mycol2", new BasicDBObject());
+         System.out.println("Collection created successfully");
       }catch(Exception e){
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
       }
