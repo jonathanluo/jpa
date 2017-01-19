@@ -19,7 +19,7 @@ import java.util.Arrays;
  * https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/
  *   mongo-java-driver-3.2.2.jar or higher
  */
-public class MongoDBJDBC {
+public class MongoCreateCollection {
 
    public static void main( String args[] ) {
 
