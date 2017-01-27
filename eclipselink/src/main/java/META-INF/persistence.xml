@@ -26,24 +26,57 @@
 
     <!-- http://www.thejavageek.com/2014/09/25/jpa-caching-example -->
     <persistence-unit name="theJavaGeekJPA">
-            <class>com.thejavageek.jpa.entities.Animal</class>
-            <class>com.thejavageek.jpa.entities.Bike</class>
-            <class>com.thejavageek.jpa.entities.Computer</class>
-            <shared-cache-mode>ALL</shared-cache-mode> <!-- ALL | ENABLE_SELECTIVE | DISABLE_SELECTIVE -->
+        <class>com.thejavageek.jpa.entities.Animal</class>
+        <class>com.thejavageek.jpa.entities.Bike</class>
+        <class>com.thejavageek.jpa.entities.Computer</class>
+        <shared-cache-mode>ALL</shared-cache-mode> <!-- ALL | ENABLE_SELECTIVE | DISABLE_SELECTIVE -->
 
-            <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/employees" />
-            <property name="javax.persistence.jdbc.user" value="dcfg" />
-            <property name="javax.persistence.jdbc.password" value="dconfig" />
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+        <properties>
+        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/employees" />
+        <property name="javax.persistence.jdbc.user" value="dcfg" />
+        <property name="javax.persistence.jdbc.password" value="dconfig" />
+        <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 
-            <!-- EclipseLink should create the database schema automatically -->
+        <!-- EclipseLink should create the database schema automatically -->
 
-            <property name="eclipselink.ddl-generation" value="create-tables" />
-            <property name="eclipselink.ddl-generation.output-mode" value="database" />
-            <property name="eclipselink.logging.level" value="SEVERE"/>
+        <property name="eclipselink.ddl-generation" value="create-tables" />
+        <property name="eclipselink.ddl-generation.output-mode" value="database" />
+        <property name="eclipselink.logging.level" value="SEVERE"/>
 
-            </properties>
+        </properties>
     </persistence-unit>
 
+    <!-- https://github.com/apress/pro-jpa-2 
+        Create sample database tables for Pro JPA 2
+        cd ~/Documents/ebook/jpa2/pro-jpa-2-master/examples/Chapter8/jpqlExamples/etc/sql
+        mysql -u dcfg -p
+        > system pwd
+        > create database projpa2;
+        > use projpa2
+        > source db.sql
+     -->
+    <persistence-unit name="jpqlExamples">
+        <class>examples.model.Employee</class>
+        <class>examples.model.Department</class>
+        <class>examples.model.Address</class>
+        <class>examples.model.DesignProject</class>
+        <class>examples.model.Phone</class>
+        <class>examples.model.Project</class>
+        <class>examples.model.QualityProject</class>
+        <validation-mode>NONE</validation-mode>
+
+        <properties>
+        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projpa2" />
+        <property name="javax.persistence.jdbc.user" value="dcfg" />
+        <property name="javax.persistence.jdbc.password" value="dconfig" />
+        <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+
+        <!-- EclipseLink should create the database schema automatically -->
+
+        <property name="eclipselink.ddl-generation" value="create-tables" />
+        <property name="eclipselink.ddl-generation.output-mode" value="database" />
+        <property name="eclipselink.logging.level" value="SEVERE"/>
+
+        </properties>
+    </persistence-unit>
 </persistence>
