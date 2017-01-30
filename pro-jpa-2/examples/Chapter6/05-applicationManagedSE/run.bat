@@ -1,2 +1,0 @@
-call ../../../config/ant
-pause
