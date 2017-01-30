@@ -1,0 +1,5 @@
+#call ../config/setenv
+
+ant -f ../config/common.xml start_db
+ant -f ../config/common.xml start_server
+

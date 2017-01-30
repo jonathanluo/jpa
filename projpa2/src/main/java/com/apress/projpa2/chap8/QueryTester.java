@@ -7,20 +7,37 @@ import org.apache.commons.lang.builder.*;
 
 /**
  * Pro JPA 2 P. 195 
- * JP QL> SELECT p FROM Phone p WHERE p.type NOT IN ('office', 'home')
- * JP QL> SELECT d.name, AVG(e.salary) FROM Department d JOIN d.employees e GROUP BY d.name
+ * JP QL> 
+ * SELECT p FROM Phone p WHERE p.type NOT IN ('office', 'home')
+ * SELECT d.name, AVG(e.salary) FROM Department d JOIN d.employees e GROUP BY d.name
  *
- * JP QL> SELECT e FROM Employee e
- * JP QL> SELECT d FROM Department d
- * JP QL> SELECT a FROM Address a
- * JP QL> SELECT d FROM DesignProject d
- * JP QL> SELECT p FROM Phone p
- * JP QL> SELECT p FROM Project p -- error
- * JP QL> SELECT q FROM QualityProject q
+ * SELECT e FROM Employee e
+ * SELECT d FROM Department d
+ * SELECT OBJECT(d) FROM Department d
+ * SELECT a FROM Address a
+ * SELECT d FROM DesignProject d
+ * SELECT p FROM Phone p
+ * SELECT p FROM Project p -- error
+ * SELECT q FROM QualityProject q
+ * SELECT a.street, a.city FROM Address a
+ * SELECT e.department FROM Employee e
+ * SELECT DISTINCT e.department FROM Employee e -- error
+ * SELECT e.name FROM Employee e
  *
- * JP QL> SELECT a.* FROM Address a -- error
- * JP QL> SELECT * FROM Address -- error
+ * SELECT e.name, e.salary, e.department.name FROM Employee e
+ * -- p.200 Constructor Expressions, The result object type must be referred to by using the fully qualified name of the object.
+ * SELECT NEW examples.model.EmployeeDetails(e.name, e.salary, e.department.name) FROM Employee e
+ *
+ * SELECT DISTINCT e.name FROM Employee e
+ * SELECT a.* FROM Address a -- error
+ * SELECT * FROM Address -- error
  * JP QL> quit
+ *
+ * P. 197
+ * SELECT e FROM Employee e
+ * As in SQL, it has been aliased to the identifier e. This aliased value is known as an 
+ * identification variable. Unlike queries in SQL, where a table alias is optional, the 
+ * use of identification variables is mandatory in JP QL
  */
 public class QueryTester {
  
