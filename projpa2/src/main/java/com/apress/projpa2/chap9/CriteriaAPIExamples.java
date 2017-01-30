@@ -64,6 +64,7 @@ public class CriteriaAPIExamples {
      * p.235 Query Roots 
      */
     public List<Department> findDepartments() {
+        System.out.println("p.235 Query Roots - findDepartments()");
 
         // Calls to the from() method are additive. Each call adds another root to the query, resulting in a Cartesian
         // product when more than one root is defined if no further constraints are applied in the WHERE clause.
@@ -83,6 +84,7 @@ public class CriteriaAPIExamples {
      * p. 236 Path Expressions
      */
     public List<Employee> findEmployees() {
+        System.out.println("p. 236 Path Expressions - findEmployees()");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
@@ -99,6 +101,7 @@ public class CriteriaAPIExamples {
      * select employee names including duplicates
      */
     public List<String> findEmployeeNames() {
+        System.out.println("p. 237 SELECT clauses - findEmployeeNames()");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<String> c = cb.createQuery(String.class);
@@ -113,6 +116,7 @@ public class CriteriaAPIExamples {
      * select employee names excluding duplicates
      */
     public List<String> findEmployeeNamesUnique() {
+        System.out.println("p. 237 SELECT clauses - findEmployeeNamesUnique()");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<String> c = cb.createQuery(String.class);
@@ -124,12 +128,85 @@ public class CriteriaAPIExamples {
         return q.getResultList();
     }
 
+    /**
+     * p. 237 Selecting Multiple Expressions - Tuple
+     */
+    public List<Tuple> tuple() {
+        System.out.println("p. 237 Selecting Multiple Expressions - tuple()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> c= cb.createTupleQuery();
+        Root<Employee> emp = c.from(Employee.class);
+        c.select(cb.tuple(emp.get("id"), emp.get("name"))); // select with tuple
+
+        TypedQuery<Tuple> q = em.createQuery(c);
+        List<Tuple> retList = q.getResultList();
+        System.out.println("id\tname");
+        System.out.println("==\t===========");
+        for (Tuple item : retList) {
+            Object id = item.get(0);
+            Object name = item.get(1);
+            System.out.println(id + "\t" + name );
+        }
+        System.out.println();
+        return retList;
+    }
+
+    /**
+     * p. 238 Selecting Multiple Expressions - multiselect
+     */
+    public List<Object[]> multiselect() {
+        System.out.println("p. 238 Selecting Multiple Expressions - multiselect()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> c = cb.createQuery(Object[].class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.multiselect(emp.get("id"), emp.get("name")); // multiselect, Object[] returned
+
+        TypedQuery<Object[]> q = em.createQuery(c);
+        List<Object[]> retList = q.getResultList();
+        System.out.println("id\tname");
+        System.out.println("==\t===========");
+        for (Object[] item : retList) {
+            Object id = item[0];
+            Object name = item[1];
+            System.out.println(id + "\t" + name );
+        }
+        System.out.println();
+        return retList;
+    }
+
+    /**
+     * p. 238 Selecting Multiple Expressions - multiselect w/ tuple
+     */
+    public List<Tuple> multiselectTuple() {
+        System.out.println("p. 238 Selecting Multiple Expressions - multiselectTuple()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Tuple> c = cb.createTupleQuery();
+        Root<Employee> emp = c.from(Employee.class);
+        c.multiselect(emp.get("id"), emp.get("name")); // multiselect, implicit tuple returned
+
+        TypedQuery<Tuple> q = em.createQuery(c);
+        List<Tuple> retList = q.getResultList();
+        System.out.println("id\tname");
+        System.out.println("==\t===========");
+        for (Tuple item : retList) {
+            Object id = item.get(0);
+            Object name = item.get(1);
+            System.out.println(id + "\t" + name );
+        }
+        System.out.println();
+        return retList;
+    }
+
     public static void main(String[] args) throws Exception {
         CriteriaAPIExamples test = new CriteriaAPIExamples();
         test.printResult(test.findDepartments());
         test.printResult(test.findEmployees());
         test.printResult(test.findEmployeeNames());
         test.printResult(test.findEmployeeNamesUnique());
+        test.tuple();
+        test.multiselect();
+        test.multiselectTuple();
         System.out.print("");
     }
 
@@ -153,6 +230,7 @@ public class CriteriaAPIExamples {
             System.out.print(ReflectionToStringBuilder.toString(result,
             ToStringStyle.SHORT_PREFIX_STYLE));
         }
+        System.out.println();
         System.out.println();
     }
 }
