@@ -6,7 +6,7 @@ import javax.persistence.*;
 import org.apache.commons.lang.builder.*;
 
 /**
- * Pro JPA 2 P. 195 
+ * Pro JPA 2 Chapter 8 p.195 
  * JP QL> 
  * SELECT p FROM Phone p WHERE p.type NOT IN ('office', 'home')
  * SELECT d.name, AVG(e.salary) FROM Department d JOIN d.employees e GROUP BY d.name
@@ -43,12 +43,10 @@ public class QueryTester {
  
     public static void main(String[] args) throws Exception {
         String unitName = "jpqlExamples"; // = args[0];
-        EntityManagerFactory emf =
-        Persistence.createEntityManagerFactory(unitName);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName);
         EntityManager em = emf.createEntityManager();
-        BufferedReader reader =
-        new BufferedReader(new InputStreamReader(System.in));
-     
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
         for (;;) {
             System.out.print("JP QL> ");
             String query = reader.readLine();
