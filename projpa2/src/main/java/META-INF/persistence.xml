@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" 
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <!-- https://github.com/apress/pro-jpa-2 
+        Create sample database tables for Pro JPA 2
+        cd ~/Documents/ebook/jpa2/pro-jpa-2-master/examples/Chapter8/jpqlExamples/etc/sql
+        mysql -u dcfg -p
+        > system pwd
+        > create database projpa2;
+        > use projpa2
+        > source db.sql
+     -->
+    <persistence-unit name="jpqlExamples">
+        <class>examples.model.Employee</class>
+        <class>examples.model.Department</class>
+        <class>examples.model.Address</class>
+        <class>examples.model.DesignProject</class>
+        <class>examples.model.Phone</class>
+        <class>examples.model.Project</class>
+        <class>examples.model.QualityProject</class>
+        <validation-mode>NONE</validation-mode>
+
+        <properties>
+        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/projpa2" />
+        <property name="javax.persistence.jdbc.user" value="dcfg" />
+        <property name="javax.persistence.jdbc.password" value="dconfig" />
+        <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+
+        <!-- EclipseLink should create the database schema automatically -->
+
+        <property name="eclipselink.ddl-generation" value="create-tables" />
+        <property name="eclipselink.ddl-generation.output-mode" value="database" />
+        <property name="eclipselink.logging.level" value="SEVERE"/>
+
+        </properties>
+    </persistence-unit>
+</persistence>
