@@ -13,8 +13,7 @@ import examples.model.Employee;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
- * Listing 9-1.  Employee Search Using Dynamic JP QL Query - p.235
- * public class SearchService
+ * Data created using projpa2/src/main/resources/examples/Chapter8/jpqlExamples/etc/sql/db.sql
  
     mysql> use projpa2
     mysql> select * from EMPLOYEE;
@@ -34,6 +33,7 @@ import examples.model.Employee;
     | 11 | Marcus    |  35000 | 1995-07-22 |       NULL |          NULL |       NULL |
     | 12 | Joe       |  36000 | 1995-07-22 |       NULL |             3 |         11 |
     | 13 | Jack      |  43000 | 1995-07-22 |       NULL |             3 |       NULL |
+    | 14 | John      |  51500 | 1999-07-26 |          2 |             2 |          9 |
     +----+-----------+--------+------------+------------+---------------+------------+
 
     six possible clauses to be used in a select query:
@@ -50,26 +50,20 @@ import examples.model.Employee;
     HAVING          AbstractQuery           having()
  *
  */
-public class CriteriaAPIFrom {
+public class CriteriaAPIExamples {
 
     EntityManager em;
 
-    public CriteriaAPIFrom() {
+    public CriteriaAPIExamples() {
         String unitName = "jpqlExamples"; // = args[0];
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName);
         em = emf.createEntityManager();
     }
 
     /**
-     * Compare JPQLQuery#findEmployees
-     *
-     * @param name
-     * @param deptName
-     * @param projectName
-     * @param city
-     * @return
+     * p.235 Query Roots 
      */
-    public List<Department> findEmployees() {
+    public List<Department> findDepartments() {
 
         // Calls to the from() method are additive. Each call adds another root to the query, resulting in a Cartesian
         // product when more than one root is defined if no further constraints are applied in the WHERE clause.
@@ -84,6 +78,62 @@ public class CriteriaAPIFrom {
         TypedQuery<Department> q = em.createQuery(c);
         return q.getResultList();
     }
+
+    /**
+     * p. 236 Path Expressions
+     */
+    public List<Employee> findEmployees() {
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.select(emp)
+        .where(cb.equal(emp.get("address").get("city"), "New York"));
+
+        TypedQuery<Employee> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
+    /**
+     * p. 237 SELECT clauses
+     * select employee names including duplicates
+     */
+    public List<String> findEmployeeNames() {
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<String> c = cb.createQuery(String.class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.select(emp.<String>get("name"));
+        TypedQuery<String> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
+    /**
+     * p. 237 SELECT clauses
+     * select employee names excluding duplicates
+     */
+    public List<String> findEmployeeNamesUnique() {
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<String> c = cb.createQuery(String.class);
+        Root<Employee> emp = c.from(Employee.class);
+        //c.select(emp.<String>get("name")).distinct(true); // or
+        c.select(emp.<String>get("name"));
+        c.distinct(true);
+        TypedQuery<String> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
+    public static void main(String[] args) throws Exception {
+        CriteriaAPIExamples test = new CriteriaAPIExamples();
+        test.printResult(test.findDepartments());
+        test.printResult(test.findEmployees());
+        test.printResult(test.findEmployeeNames());
+        test.printResult(test.findEmployeeNamesUnique());
+        System.out.print("");
+    }
+
+    // ================================================================================================= private methods
 
     private void printResult(Object result) throws Exception {
         if (result == null) {
@@ -104,11 +154,5 @@ public class CriteriaAPIFrom {
             ToStringStyle.SHORT_PREFIX_STYLE));
         }
         System.out.println();
-    }
-
-    public static void main(String[] args) throws Exception {
-        CriteriaAPIFrom test = new CriteriaAPIFrom();
-        List<Department> retList = test.findEmployees();
-        test.printResult(retList);
     }
 }
