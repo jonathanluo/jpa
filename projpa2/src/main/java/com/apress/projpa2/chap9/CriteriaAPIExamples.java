@@ -10,6 +10,7 @@ import org.apache.commons.lang.builder.*;
 
 import examples.model.Department;
 import examples.model.Employee;
+import examples.model.EmployeeInfo;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
@@ -198,15 +199,64 @@ public class CriteriaAPIExamples {
         return retList;
     }
 
+    /**
+     * p. 238 Selecting Multiple Constructor Expressions
+     */
+    public List<EmployeeInfo> multiselectExpressions() {
+        System.out.println("p. 238 Selecting Multiple Constructor Expressions - multiselectExpressions()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<EmployeeInfo> c = cb.createQuery(EmployeeInfo.class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.multiselect(emp.get("id"), emp.get("name")); // <==> c.select(cb.construct(EmployeeInfo.class, emp.get("id"), emp.get("name")));
+
+        TypedQuery<EmployeeInfo> q = em.createQuery(c);
+        List<EmployeeInfo> retList = q.getResultList();
+        System.out.println("id\tname");
+        System.out.println("==\t===========");
+        for (EmployeeInfo item : retList) {
+            System.out.println(item);
+        }
+        System.out.println();
+        return retList;
+    }
+
+    /**
+     * p. 239 Selecting Multiple using Aliases
+     */
+    public List<Tuple> multiselectAlias() {
+        System.out.println("p. 239 Selecting Multiple using Aliases - multiselectAlias()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Tuple> c= cb.createTupleQuery();
+        Root<Employee> emp = c.from(Employee.class);
+        c.multiselect(emp.get("id").alias("id"), emp.get("name").alias("fullName")); // alias
+
+        TypedQuery<Tuple> q = em.createQuery(c);
+        List<Tuple> retList = q.getResultList();
+        System.out.println("id\tname");
+        System.out.println("==\t===========");
+        for (Tuple t : q.getResultList()) {
+            Integer id = t.get("id", Integer.class);
+            String fullName = t.get("fullName", String.class);
+            System.out.println(id + "\t" + fullName );
+        }
+        System.out.println();
+        return retList;
+    }
+
     public static void main(String[] args) throws Exception {
         CriteriaAPIExamples test = new CriteriaAPIExamples();
         test.printResult(test.findDepartments());
         test.printResult(test.findEmployees());
         test.printResult(test.findEmployeeNames());
         test.printResult(test.findEmployeeNamesUnique());
+
         test.tuple();
         test.multiselect();
         test.multiselectTuple();
+        test.multiselectExpressions();
+        test.multiselectAlias();
         System.out.print("");
     }
 
