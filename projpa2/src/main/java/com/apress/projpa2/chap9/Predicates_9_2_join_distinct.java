@@ -17,7 +17,9 @@ import examples.model.Project;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
- * Listing 9-2. Employee Search Using Criteria API    - p.229
+ *
+ * Listing 9-2. Employee Search Using Criteria API - Use join and distinct       p.229
+ *
  * See also Predicates_9_3
  
     mysql> use projpa2
@@ -54,11 +56,11 @@ import examples.model.Project;
     HAVING          AbstractQuery           having()
  *
  */
-public class Predicates_9_2 {
+public class Predicates_9_2_join_distinct {
 
     EntityManager em;
 
-    public Predicates_9_2() {
+    public Predicates_9_2_join_distinct() {
         String unitName = "jpqlExamples"; // = args[0];
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName);
         em = emf.createEntityManager();
@@ -159,7 +161,7 @@ public class Predicates_9_2 {
     }
 
     public static void main(String[] args) throws Exception {
-        Predicates_9_2 test = new Predicates_9_2();
+        Predicates_9_2_join_distinct test = new Predicates_9_2_join_distinct();
         String name = "John";
         String deptName = null;
         String projectName = null;
