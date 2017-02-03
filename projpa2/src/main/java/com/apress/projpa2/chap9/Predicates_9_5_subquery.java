@@ -65,17 +65,6 @@ public class Predicates_9_5_subquery {
         em = emf.createEntityManager();
     }
 
-    /**
-     * Listing 9-2. Employee Search Using Criteria API    p.230
-     *
-     * Compare JPQLQuery#findEmployees
-     *
-     * @param name
-     * @param deptName
-     * @param projectName
-     * @param city
-     * @return
-     */
     public List<Employee> findEmployees_Subquery_p246(String name, String projectName) {
         System.out.println("findEmployees('" + name + "%', '" + projectName +"')");
 
@@ -87,7 +76,6 @@ public class Predicates_9_5_subquery {
         //c.distinct(true); // distinct no longer need by using sub query
 
         List<Predicate> criteria = new ArrayList<Predicate>();
-
         if (name != null) {
             ParameterExpression<String> pe1 = cb.parameter(String.class, "nameUpper");
             ParameterExpression<String> pe2 = cb.parameter(String.class, "nameLower");
@@ -96,6 +84,10 @@ public class Predicates_9_5_subquery {
             criteria.add(cb.or(p1, p2));
         }
         if (projectName != null) {
+            /*  SELECT e
+                FROM Employee e
+                WHERE e IN (SELECT emp FROM Project p JOIN p.employees emp WHERE p.name = :project)
+             */
             Subquery<Employee> sq = c.subquery(Employee.class); // p.246 failed
             Root<Project> project = sq.from(Project.class);
             Join<Project,Employee> sqEmp = project.join("employees");
@@ -103,7 +95,6 @@ public class Predicates_9_5_subquery {
               .where(cb.equal(project.get("name"), cb.parameter(String.class, "project")));
             criteria.add(cb.in(emp).value(sq));
         }
-
         if (criteria.size() == 0) {
             throw new RuntimeException("no criteria");
         } else if (criteria.size() == 1) {
@@ -137,7 +128,6 @@ public class Predicates_9_5_subquery {
         //c.distinct(true); // distinct no longer need by using sub query
 
         List<Predicate> criteria = new ArrayList<Predicate>();
-
         if (name != null) {
             ParameterExpression<String> pe1 = cb.parameter(String.class, "nameUpper");
             ParameterExpression<String> pe2 = cb.parameter(String.class, "nameLower");
@@ -147,12 +137,8 @@ public class Predicates_9_5_subquery {
         }
         if (projectName != null) {
             // p.247 use EXISTS instead of IN and shift the conditional expression into the WHERE clause of the subquery
-            /*  SELECT e
-                FROM Employee e
-                WHERE EXISTS (SELECT p
-                              FROM Project p JOIN p.employees emp
-                              WHERE emp = e AND
-                              p.name = :name)
+            /*  SELECT e FROM Employee e
+                WHERE EXISTS (SELECT p FROM Project p JOIN p.employees emp WHERE emp = e AND p.name = :name)
             */
             Subquery<Project> sq = c.subquery(Project.class);
             Root<Project> project = sq.from(Project.class);
