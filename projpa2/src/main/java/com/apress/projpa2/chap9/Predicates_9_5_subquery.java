@@ -5,7 +5,6 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -65,15 +64,22 @@ public class Predicates_9_5_subquery {
         em = emf.createEntityManager();
     }
 
-    public List<Employee> findEmployees_Subquery_p246(String name, String projectName) {
-        System.out.println("findEmployees('" + name + "%', '" + projectName +"')");
+    /**
+     *
+     * /projpa2/src/main/resources/examples/Chapter9/03-empSearchSubQuery/src/model/examples/stateless/SearchService.java
+     *
+     */
+    public List<Employee> findEmployees_Subquery_p246(String name, String deptName, String projectName, String city) {
+        System.out.println("findEmployees_Subquery_p246('" + name + "%', " + deptName + ", " + projectName + ", " + city + ")");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
         Root<Employee> emp = c.from(Employee.class); // A root in a criteria query corresponds to an identification variable in JP QL
                                                      // Calls to the from() method are additive. Each call adds another root to the query
         c.select(emp);
+        //see Predicates_9_2_join_distinct#findEmployees
         //c.distinct(true); // distinct no longer need by using sub query
+        //Join<Employee,Project> project = emp.join("projects", JoinType.LEFT);
 
         List<Predicate> criteria = new ArrayList<Predicate>();
         if (name != null) {
@@ -83,18 +89,34 @@ public class Predicates_9_5_subquery {
             Predicate p2 = cb.like(emp.get("name"), pe2);
             criteria.add(cb.or(p1, p2));
         }
+        if (deptName != null) {
+            ParameterExpression<String> p = cb.parameter(String.class, "dept");
+            criteria.add(cb.equal(emp.get("dept").get("name"), p));
+        }
         if (projectName != null) {
             /*  SELECT e
                 FROM Employee e
                 WHERE e IN (SELECT emp FROM Project p JOIN p.employees emp WHERE p.name = :project)
              */
-            Subquery<Employee> sq = c.subquery(Employee.class); // p.246 failed
+//            Subquery<Employee> sq = c.subquery(Employee.class); // from p.246 failed
+//            Root<Project> project = sq.from(Project.class);
+//            Join<Project,Employee> sqEmp = project.join("employees");
+//            sq.select(sqEmp)
+//              .where(cb.equal(project.get("name"), cb.parameter(String.class, "project")));
+//            criteria.add(cb.in(emp).value(sq));
+            // from Chapter9/03-empSearchSubQuery/src/model/examples/stateless/SearchService.java lines 85-91
+            Subquery<Integer> sq = c.subquery(Integer.class);
             Root<Project> project = sq.from(Project.class);
             Join<Project,Employee> sqEmp = project.join("employees");
-            sq.select(sqEmp)
+            sq.select(sqEmp.<Integer>get("id"))
               .where(cb.equal(project.get("name"), cb.parameter(String.class, "project")));
-            criteria.add(cb.in(emp).value(sq));
+            criteria.add(cb.in(emp.get("id")).value(sq));
         }
+        if (city != null) {
+            ParameterExpression<String> p = cb.parameter(String.class, "city");
+            criteria.add(cb.equal(emp.get("address").get("city"), p));
+        }
+
         if (criteria.size() == 0) {
             throw new RuntimeException("no criteria");
         } else if (criteria.size() == 1) {
@@ -117,8 +139,11 @@ public class Predicates_9_5_subquery {
         return q.getResultList();
     }
 
+    /**
+     * /projpa2/src/main/resources/examples/Chapter9/06-canonicalMetamodelQuery/src/model/examples/stateless/SearchService.java
+     */
     public List<Employee> findEmployees_Subquery_p247(String name, String projectName) {
-        System.out.println("findEmployees('" + name + "%', '" + projectName +"')");
+        System.out.println("findEmployees_Subquery_p247('" + name + "%', " + projectName + ")");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
@@ -209,8 +234,10 @@ public class Predicates_9_5_subquery {
     public static void main(String[] args) throws Exception {
         Predicates_9_5_subquery test = new Predicates_9_5_subquery();
         String name = "Jo";
-//        List<Employee> retList = test.findEmployees_Subquery_p246(name, "Design Release2"); // failed
-        List<Employee> retList = test.findEmployees_Subquery_p247(name, "Design Release2");
+        List<Employee> retList = test.findEmployees_Subquery_p246(name, null, "Design Release2", null); // failed
+        test.printResult(retList);
+
+        retList = test.findEmployees_Subquery_p247(name, "Design Release2");
         test.printResult(retList);
 
         retList = test.findEmployees_Subquery_p247(name, "Design Release2, Release1");

@@ -77,7 +77,9 @@ public class Predicates_9_2_join_distinct {
      * @param city
      * @return
      */
-    public List<Employee> findEmployees(String name, String deptName, String projectName, String city) {
+    public List<Employee> findEmployees(String name, String deptName, String projectName, String city, boolean distinct) {
+
+    	System.out.println("findEmployees(" + name + ", " + deptName + ", " + projectName + ", " + distinct + ")");
 
         // CriteriaBuilder is a factory with which we create the query definition itself, an instance of the CriteriaQuery
         // interface, as well as many of various components of the query definition such as conditional expressions
@@ -91,7 +93,7 @@ public class Predicates_9_2_join_distinct {
         Root<Employee> emp = c.from(Employee.class); // A root in a criteria query corresponds to an identification variable in JP QL
                                                      // Calls to the from() method are additive. Each call adds another root to the query
         c.select(emp);
-        c.distinct(true);
+        c.distinct(distinct);
         Join<Employee,Project> project = emp.join("projects", JoinType.LEFT);
 
         // public interface Predicate extends Expression<java.lang.Boolean>
@@ -158,6 +160,7 @@ public class Predicates_9_2_join_distinct {
             ToStringStyle.SHORT_PREFIX_STYLE));
         }
         System.out.println();
+        System.out.println();
     }
 
     public static void main(String[] args) throws Exception {
@@ -166,15 +169,20 @@ public class Predicates_9_2_join_distinct {
         String deptName = null;
         String projectName = null;
         String city = null;
-        List<Employee> retList = test.findEmployees(name, deptName, projectName, city);
+        boolean distinct = true;
+        List<Employee> retList = test.findEmployees(name, deptName, projectName, city, distinct);
+        test.printResult(retList);
+
+        distinct = false;
+        retList = test.findEmployees(name, deptName, projectName, city, distinct);
         test.printResult(retList);
 
         name = "Stephanie";
-        retList = test.findEmployees(name, deptName, projectName, city);
+        retList = test.findEmployees(name, deptName, projectName, city, distinct);
         test.printResult(retList);
 
         name = "Marcus";
-        retList = test.findEmployees(name, deptName, projectName, city);
+        retList = test.findEmployees(name, deptName, projectName, city, distinct);
         test.printResult(retList);
     }
 }
