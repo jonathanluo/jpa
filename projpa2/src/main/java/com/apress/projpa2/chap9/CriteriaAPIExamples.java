@@ -6,7 +6,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Department;
 import examples.model.Employee;
@@ -74,8 +74,8 @@ public class CriteriaAPIExamples {
         Root<Department> dept = c.from(Department.class);
         Root<Employee> emp = c.from(Employee.class);
         c.select(dept)
-        .distinct(true)
-        .where(cb.equal(dept, emp.get("department")));
+         .distinct(true)
+         .where(cb.equal(dept, emp.get("department")));
 
         TypedQuery<Department> q = em.createQuery(c);
         return q.getResultList();
@@ -247,10 +247,10 @@ public class CriteriaAPIExamples {
 
     public static void main(String[] args) throws Exception {
         CriteriaAPIExamples test = new CriteriaAPIExamples();
-        test.printResult(test.findDepartments());
-        test.printResult(test.findEmployees());
-        test.printResult(test.findEmployeeNames());
-        test.printResult(test.findEmployeeNamesUnique());
+        ProJPAUtil.printResult(test.findDepartments());
+        ProJPAUtil.printResult(test.findEmployees());
+        ProJPAUtil.printResult(test.findEmployeeNames());
+        ProJPAUtil.printResult(test.findEmployeeNamesUnique());
 
         test.tuple();
         test.multiselect();
@@ -258,29 +258,5 @@ public class CriteriaAPIExamples {
         test.multiselectExpressions();
         test.multiselectAlias();
         System.out.print("");
-    }
-
-    // ================================================================================================= private methods
-
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-        System.out.println();
     }
 }

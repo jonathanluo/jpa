@@ -3,7 +3,7 @@ package com.apress.projpa2.chap9;
 import java.util.*;
 import javax.persistence.*;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
 
@@ -80,27 +80,6 @@ public class JPQLQuery {
         if (city != null) { q.setParameter("city", city); }
         return (List<Employee>)q.getResultList();
     }
-    
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-    }
 
     public static void main(String[] args) throws Exception {
         JPQLQuery test = new JPQLQuery();
@@ -109,6 +88,6 @@ public class JPQLQuery {
         String projectName = null;
         String city = null;
         List<Employee> retList = test.findEmployees(name, deptName, projectName, city);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
     }
 }

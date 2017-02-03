@@ -8,7 +8,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
 
@@ -30,7 +30,7 @@ public class CriteriaBuilderTest {
         // run search query
         TypedQuery<Employee> query = em.createQuery(c);
         List<Employee> retList = query.getResultList();
-        printResult(retList);
+        ProJPAUtil.printResult(retList);
     }
 
     public void pathExpression() throws Exception {
@@ -60,29 +60,8 @@ public class CriteriaBuilderTest {
         // run search query
         TypedQuery<Employee> query = em.createQuery(c);
         List<Employee> retList = query.getResultList();
-        printResult(retList);
+        ProJPAUtil.printResult(retList);
 
-    }
-
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
     }
 
     public static void main(String[] args) throws Exception {

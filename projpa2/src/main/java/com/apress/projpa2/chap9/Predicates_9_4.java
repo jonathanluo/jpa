@@ -7,7 +7,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
 
@@ -106,27 +106,6 @@ public class Predicates_9_4 {
         return q.getResultList();
     }
 
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-    }
-
     public static void main(String[] args) throws Exception {
         Predicates_9_4 test = new Predicates_9_4();
         String name = "John";
@@ -134,14 +113,14 @@ public class Predicates_9_4 {
         String projectName = null;
         String city = null;
         List<Employee> retList = test.findEmployees(name, deptName, projectName, city);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "Stephanie";
         retList = test.findEmployees(name, deptName, projectName, city);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "Marcus";
         retList = test.findEmployees2(name, deptName, projectName, city);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
     }
 }

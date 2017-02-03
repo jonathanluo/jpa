@@ -3,7 +3,8 @@ package com.apress.projpa2.chap8;
 import java.io.*;
 import java.util.*;
 import javax.persistence.*;
-import org.apache.commons.lang.builder.*;
+
+import com.apress.projpa2.ProJPAUtil;
 
 /**
  * Pro JPA 2 Chapter 8 p.195 
@@ -63,7 +64,7 @@ public class QueryTester {
                     int count = 0;
                     for (Object o : result) {
                         System.out.print(++count + " ");
-                        printResult(o);
+                        ProJPAUtil.printResult(o);
                     }
                 } else {
                     System.out.println("0 results returned");
@@ -74,24 +75,4 @@ public class QueryTester {
         }
     }
 
-    private static void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-    }
 }

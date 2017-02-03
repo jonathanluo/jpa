@@ -1,6 +1,8 @@
 package com.apress.projpa2.chap9;
 
 import java.util.*;
+import java.util.logging.Logger;
+
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -10,7 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
 import examples.model.Project;
@@ -56,6 +58,8 @@ import examples.model.Project;
  */
 public class Predicates_9_5_subquery {
 
+    private static final Logger LOGGER = Logger.getLogger(Predicates_9_5_subquery.class.getName());
+
     EntityManager em;
 
     public Predicates_9_5_subquery() {
@@ -70,6 +74,7 @@ public class Predicates_9_5_subquery {
      *
      */
     public List<Employee> findEmployees_Subquery_p246(String name, String deptName, String projectName, String city) {
+        LOGGER.info("findEmployees_Subquery_p246('" + name + "%', " + deptName + ", " + projectName + ", " + city + ")");
         System.out.println("findEmployees_Subquery_p246('" + name + "%', " + deptName + ", " + projectName + ", " + city + ")");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -142,8 +147,8 @@ public class Predicates_9_5_subquery {
     /**
      * /projpa2/src/main/resources/examples/Chapter9/06-canonicalMetamodelQuery/src/model/examples/stateless/SearchService.java
      */
-    public List<Employee> findEmployees_Subquery_p247(String name, String projectName) {
-        System.out.println("findEmployees_Subquery_p247('" + name + "%', " + projectName + ")");
+    public List<Employee> findEmployees_Subquery_p247(String name, String projectName, boolean distinct, boolean subqueryIn) {
+        System.out.println("findEmployees_Subquery_p247('" + name + "%', " + projectName + ", distinct: " + distinct + ", subqueryIn: " + subqueryIn + ")");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
@@ -168,10 +173,16 @@ public class Predicates_9_5_subquery {
             Subquery<Project> sq = c.subquery(Project.class);
             Root<Project> project = sq.from(Project.class);
             Join<Project,Employee> sqEmp = project.join("employees");
-            sq.select(project)
-              .where(cb.equal(sqEmp, emp),
-                     cb.in(project.get("name")).value(cb.parameter(String.class,"project"))); // okay
-//            cb.equal(project.get("name"), cb.parameter(String.class,"project"))); // okay
+            sq.distinct(distinct);
+            if (subqueryIn) {
+                sq.select(project)
+                  .where(cb.equal(sqEmp, emp),
+                         cb.in(project.get("name")).value(cb.parameter(String.class,"project")));
+            } else {
+                sq.select(project)
+                  .where(cb.equal(sqEmp, emp),
+                         cb.equal(project.get("name"), cb.parameter(String.class,"project")));
+            }
             criteria.add(cb.exists(sq));
         }
 
@@ -197,28 +208,6 @@ public class Predicates_9_5_subquery {
         return q.getResultList();
     }
 
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-        System.out.println();
-    }
-
     /**
      *
         select * from PROJECT;
@@ -235,20 +224,19 @@ public class Predicates_9_5_subquery {
         Predicates_9_5_subquery test = new Predicates_9_5_subquery();
         String name = "Jo";
         List<Employee> retList = test.findEmployees_Subquery_p246(name, null, "Design Release2", null); // failed
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2");
-        test.printResult(retList);
+        //retList = test.findEmployees_Subquery_p247(name, "Design Release2, Release1", true); // 0 rows
+        retList = test.findEmployees_Subquery_p247(name, "Design Release2", true, true);
+        ProJPAUtil.printResult(retList);
 
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2, Release1");
-        test.printResult(retList);
+        retList = test.findEmployees_Subquery_p247(name, "Design Release2", false, true);
+        ProJPAUtil.printResult(retList);
 
-//        name = "St";
-//        retList = test.findEmployees(name, "");
-//        test.printResult(retList);
-//
-//        name = "Ma";
-//        retList = test.findEmployees(name, "");
-//        test.printResult(retList);
+        retList = test.findEmployees_Subquery_p247(name, "Design Release2", true, false);
+        ProJPAUtil.printResult(retList);
+
+        retList = test.findEmployees_Subquery_p247(name, "Design Release2", false, false);
+        ProJPAUtil.printResult(retList);
     }
 }

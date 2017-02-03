@@ -10,7 +10,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
 import examples.model.Project;
@@ -141,28 +141,6 @@ public class Predicates_9_2_join_distinct {
         return q.getResultList();
     }
 
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-        System.out.println();
-    }
-
     public static void main(String[] args) throws Exception {
         Predicates_9_2_join_distinct test = new Predicates_9_2_join_distinct();
         String name = "John";
@@ -171,18 +149,18 @@ public class Predicates_9_2_join_distinct {
         String city = null;
         boolean distinct = true;
         List<Employee> retList = test.findEmployees(name, deptName, projectName, city, distinct);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         distinct = false;
         retList = test.findEmployees(name, deptName, projectName, city, distinct);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "Stephanie";
         retList = test.findEmployees(name, deptName, projectName, city, distinct);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "Marcus";
         retList = test.findEmployees(name, deptName, projectName, city, distinct);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
     }
 }

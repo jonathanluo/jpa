@@ -4,16 +4,13 @@ import java.util.*;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
-import examples.model.Project;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
@@ -114,40 +111,18 @@ public class Predicates_Or {
         return q.getResultList();
     }
 
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(ReflectionToStringBuilder.toString(result,
-            ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-        System.out.println();
-    }
-
     public static void main(String[] args) throws Exception {
         Predicates_Or test = new Predicates_Or();
         String name = "Jo";
         List<Employee> retList = test.findEmployees(name);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "St";
         retList = test.findEmployees(name);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
 
         name = "Ma";
         retList = test.findEmployees(name);
-        test.printResult(retList);
+        ProJPAUtil.printResult(retList);
     }
 }

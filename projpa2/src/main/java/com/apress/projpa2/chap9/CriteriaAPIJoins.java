@@ -9,11 +9,9 @@ import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 
-import org.apache.commons.lang.builder.*;
+import com.apress.projpa2.ProJPAUtil;
 
-import examples.model.Department;
 import examples.model.Employee;
-import examples.model.EmployeeInfo;
 import examples.model.Phone;
 
 /**
@@ -128,31 +126,8 @@ public class CriteriaAPIJoins {
     public static void main(String[] args) throws Exception {
         CriteriaAPIJoins test = new CriteriaAPIJoins();
 //        test.printResult(test.executeQueryUsingMetamodel());
-        test.printResult(test.fetchJoin());
-        test.printResult(test.fetchJoin2());
+        ProJPAUtil.printResult(test.fetchJoin());
+        ProJPAUtil.printResult(test.fetchJoin2());
         System.out.print("");
-    }
-
-    // ================================================================================================= private methods
-
-    private void printResult(Object result) throws Exception {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long ||
-            result instanceof Double ||
-            result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else { // list goes here
-            System.out.print(ReflectionToStringBuilder.toString(result, ToStringStyle.SHORT_PREFIX_STYLE));
-        }
-        System.out.println();
-        System.out.println();
     }
 }
