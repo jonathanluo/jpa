@@ -208,6 +208,62 @@ public class Predicates_9_5_subquery {
         return q.getResultList();
     }
 
+    public List<Employee> findEmployees_Subquery_p248(String name, String projectName) {
+        System.out.println("findEmployees_Subquery_p247('" + name + "%', " + projectName + ")");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
+        Root<Employee> emp = c.from(Employee.class); // A root in a criteria query corresponds to an identification variable in JP QL
+                                                     // Calls to the from() method are additive. Each call adds another root to the query
+        c.select(emp);
+        //c.distinct(true); // distinct no longer need by using sub query
+
+        List<Predicate> criteria = new ArrayList<Predicate>();
+        if (name != null) {
+            ParameterExpression<String> pe1 = cb.parameter(String.class, "nameUpper");
+            ParameterExpression<String> pe2 = cb.parameter(String.class, "nameLower");
+            Predicate p1 = cb.like(emp.get("name"), pe1);
+            Predicate p2 = cb.like(emp.get("name"), pe2);
+            criteria.add(cb.or(p1, p2));
+        }
+        if (projectName != null) {
+            /*
+             * Root object obtained by from() method only accepts a persistent class type
+             * Use correlate in sub query
+             *
+             * SELECT e FROM Employee e WHERE EXISTS 
+             *      (SELECT p FROM e.projects p WHERE p.name = :name)
+             */
+            Subquery<Project> sq = c.subquery(Project.class);
+            Root<Employee> sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
+            Join<Employee,Project> project = sqEmp.join("projects");
+            sq.select(project)
+              .where(cb.equal(project.get("name"), cb.parameter(String.class,"project")));
+            criteria.add(cb.exists(sq));
+        }
+
+        if (criteria.size() == 0) {
+            throw new RuntimeException("no criteria");
+        } else if (criteria.size() == 1) {
+            c.where(criteria.get(0));
+        } else {
+            // notice odd invocation of the and() method. Unfortunately, the designers of the Collection.toArray() method decided that,
+            // in order to avoid casting the return type, an array to be populated should also be passed in as an argument or 
+            // an empty array in the case where we want the collection to create the array for us
+            c.where(cb.and(criteria.toArray(new Predicate[0])));
+        }
+
+        TypedQuery<Employee> q = em.createQuery(c);
+        if (name != null) { 
+            q.setParameter("nameUpper", name.toUpperCase() + "%");
+            q.setParameter("nameLower", name.toLowerCase() + "%");
+        }
+        if (projectName != null) { 
+            q.setParameter("project", projectName);
+        }
+        return q.getResultList();
+    }
+
     /**
      *
         select * from PROJECT;
@@ -223,20 +279,17 @@ public class Predicates_9_5_subquery {
     public static void main(String[] args) throws Exception {
         Predicates_9_5_subquery test = new Predicates_9_5_subquery();
         String name = "Jo";
-        List<Employee> retList = test.findEmployees_Subquery_p246(name, null, "Design Release2", null); // failed
-        ProJPAUtil.printResult(retList);
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p246(name, null, "Design Release2", null));
 
         //retList = test.findEmployees_Subquery_p247(name, "Design Release2, Release1", true); // 0 rows
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2", true, true);
-        ProJPAUtil.printResult(retList);
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p247(name, "Design Release2", true, true));
 
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2", false, true);
-        ProJPAUtil.printResult(retList);
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p247(name, "Design Release2", false, true));
 
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2", true, false);
-        ProJPAUtil.printResult(retList);
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p247(name, "Design Release2", true, false));
 
-        retList = test.findEmployees_Subquery_p247(name, "Design Release2", false, false);
-        ProJPAUtil.printResult(retList);
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p247(name, "Design Release2", false, false));
+
+        ProJPAUtil.printResult(test.findEmployees_Subquery_p248(name, "Design Release2"));
     }
 }
