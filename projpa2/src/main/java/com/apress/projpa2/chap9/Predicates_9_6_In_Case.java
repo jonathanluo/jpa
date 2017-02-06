@@ -11,8 +11,10 @@ import javax.persistence.criteria.Subquery;
 import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Department;
+import examples.model.DesignProject;
 import examples.model.Employee;
 import examples.model.Project;
+import examples.model.QualityProject;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
@@ -56,11 +58,11 @@ import examples.model.Project;
     +----+----------------+-------+---------------------+-------+
 *
  */
-public class Predicates_9_6_InExpressions {
+public class Predicates_9_6_In_Case {
 
     EntityManager em;
 
-    public Predicates_9_6_InExpressions() {
+    public Predicates_9_6_In_Case() {
         String unitName = "jpqlExamples"; // = args[0];
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName);
         em = emf.createEntityManager();
@@ -171,11 +173,69 @@ public class Predicates_9_6_InExpressions {
     }
     */
 
+    /**
+     *  p.250
+        SELECT p.name,
+        CASE WHEN TYPE(p) = DesignProject THEN 'Development'
+             WHEN TYPE(p) = QualityProject THEN 'QA'
+             ELSE 'Non-Development'
+        END
+        FROM Project p
+        WHERE p.employees IS NOT EMPTY
+    */
+    public List<Object[]> findEmployees_Case() {
+
+        System.out.println("findEmployees_Case()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> c = cb.createQuery(Object[].class);
+        Root<Project> project = c.from(Project.class);
+        c.multiselect(project.get("name"),
+            cb.selectCase()
+              .when(cb.equal(project.type(), DesignProject.class),  "Development")
+              .when(cb.equal(project.type(), QualityProject.class), "QA")
+              .otherwise("Non-Development"))
+        .where(cb.isNotEmpty(project.<List<Employee>>get("employees")));
+
+        TypedQuery<Object[]> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
+    /**
+     *  p.251
+        SELECT p.name,
+        CASE TYPE(p)
+            WHEN DesignProject THEN 'Development'
+            WHEN QualityProject THEN 'QA'
+            ELSE 'Non-Development'
+        END
+        FROM Project p
+        WHERE p.employees IS NOT EMPTY
+     */
+    public List<Object[]> findEmployees_Case2() {
+
+        System.out.println("findEmployees_Case2()");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Object[]> c = cb.createQuery(Object[].class);
+        Root<Project> project = c.from(Project.class);
+        c.multiselect(project.get("name"),
+        cb.selectCase(project.type())
+            .when(DesignProject.class, "Development")
+            .when(QualityProject.class, "QA")
+            .otherwise("Non-Development"))
+        .where(cb.isNotEmpty(project.<List<Employee>>get("employees")));
+
+        TypedQuery<Object[]> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
     public static void main(String[] args) throws Exception {
-        Predicates_9_6_InExpressions test = new Predicates_9_6_InExpressions();
+        Predicates_9_6_In_Case test = new Predicates_9_6_In_Case();
         ProJPAUtil.printResult(test.findEmployees("NY", "CA"));
         ProJPAUtil.printResult(test.findEmployees("NY", "NJ"));
         ProJPAUtil.printResult(test.findEmployees2("NY", "NJ"));
         ProJPAUtil.printResult(test.findEmployees_9_6());
+        ProJPAUtil.printResult(test.findEmployees_Case());
+        ProJPAUtil.printResult(test.findEmployees_Case2());
     }
 }
