@@ -14,6 +14,7 @@ import javax.persistence.criteria.Subquery;
 
 import com.apress.projpa2.ProJPAUtil;
 
+import examples.model.DesignProject;
 import examples.model.Employee;
 import examples.model.Project;
 
@@ -208,8 +209,8 @@ public class Predicates_9_5_subquery {
         return q.getResultList();
     }
 
-    public List<Employee> findEmployees_Subquery_p248(String name, String projectName) {
-        System.out.println("findEmployees_Subquery_p247('" + name + "%', " + projectName + ")");
+    public List<Employee> findEmployees_Subquery_correlate_p248(String name, String projectName) {
+        System.out.println("findEmployees_Subquery_correlate_p248('" + name + "%', " + projectName + ")");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
@@ -264,6 +265,44 @@ public class Predicates_9_5_subquery {
         return q.getResultList();
     }
 
+    /** p.248
+        Before we leave subqueries in the Criteria API, there is one more corner case with correlated subqueries
+        to explore: referencing a join expression from the parent query in the FROM clause of a subquery. Consider the
+        following example that returns projects containing managers with direct reports earning an average salary higher
+        than a user-defined threshold:
+
+        SELECT p
+        FROM Project p JOIN p.employees e
+        WHERE TYPE(p) = DesignProject AND
+            e.directs IS NOT EMPTY AND
+            (SELECT AVG(d.salary)
+            FROM e.directs d) >= :value
+
+        When creating the Criteria API query definition for this query, we must correlate the employees attribute of
+        Project and then join it to the direct reports in order to calculate the average salary. This example also demonstrates
+        the use of the type() method of the Path interface in order to do a polymorphic comparison of types:
+     */
+    public List<Project> findProjects_Subquery_p248(long salary) {
+        System.out.println("findProjects_Subquery_p248(salary: '" + salary + "')");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Project> c = cb.createQuery(Project.class);
+        Root<Project> project = c.from(Project.class);
+        Join<Project,Employee> emp = project.join("employees");
+        Subquery<Double> sq = c.subquery(Double.class); // Subquery<Number> sq = c.subquery(Number.class); 
+        Join<Project,Employee> sqEmp = sq.correlate(emp);
+        Join<Employee,Employee> directs = sqEmp.join("directs");
+        c.select(project)
+         .where(cb.equal(project.type(), DesignProject.class),
+                cb.isNotEmpty(emp.<Collection>get("directs")),
+                cb.ge(sq.select(cb.avg(directs.get("salary"))),
+                                cb.parameter(Number.class, "value")));
+
+        TypedQuery<Project> q = em.createQuery(c);
+        q.setParameter("value", salary);
+        return q.getResultList();
+    }
+
     /**
      *
         select * from PROJECT;
@@ -290,6 +329,8 @@ public class Predicates_9_5_subquery {
 
         ProJPAUtil.printResult(test.findEmployees_Subquery_p247(name, "Design Release2", false, false));
 
-        ProJPAUtil.printResult(test.findEmployees_Subquery_p248(name, "Design Release2"));
+        ProJPAUtil.printResult(test.findEmployees_Subquery_correlate_p248(name, "Design Release2"));
+
+        ProJPAUtil.printResult(test.findProjects_Subquery_p248(30000));
     }
 }
