@@ -32,6 +32,50 @@ import javax.persistence.TemporalType;
         Set<SideA> sideas;
     }
 
+    http://stackoverflow.com/questions/2749689/what-is-the-owning-side-in-an-orm-mapping
+    You can imagine that the owning side is the entity that has the reference to the other one. In your excerpt, you have
+    an one-to-one relationship. Since it's a symmetric relation, you'll end up having that if object A is in relation 
+    with object B then also the vice-versa is true.
+
+    This means that saving into object A a reference to object B and saving in object B a reference to object A will be 
+    redundant: that's why you choose which object "owns" the other having the reference to it.
+
+    When you have got an one-to-many relationship, the objects related to the "many" part will be the owning side, 
+    otherwise you would have to store many references from a single object to a multitude. To avoid that, every object 
+    in the second class will have a pointer to the single one they refer to (so they are the owning side).
+
+    In conclusion the owning side is the entity that has the reference to the other.
+
+    <Angular University>
+
+    Why is the notion of a owning side necessary:
+
+    The idea of a owning side of a bidirectional relation comes from the fact that in relational databases there are no 
+    bidirectional relations like in the case of objects. In databases we only have unidirectional relations - foreign keys.
+
+    What is the reason for the name 'owning side'?
+
+    The owning side of the relation tracked by Hibernate is the side of the relation that owns the foreign key in the 
+    database.
+
+    What is the problem that the notion of owning side solves?
+
+    Take an example of two entities mapped without declaring a owning side:
+
+    @Entity
+    @Table(name="PERSONS")
+    public class Person {
+        @OneToMany
+        private List<IdDocument>  idDocuments;
+    }
+
+    @Entity
+    @Table(name="ID_DOCUMENTS")
+    public class IdDocument {
+        @ManyToOne
+        private Person person;
+    }
+
  */
 @Entity
 public class Employee {
