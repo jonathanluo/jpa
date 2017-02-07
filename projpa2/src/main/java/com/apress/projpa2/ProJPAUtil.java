@@ -1,6 +1,9 @@
 package com.apress.projpa2;
 
+import java.util.List;
 import java.util.Vector;
+
+import javax.persistence.Tuple;
 
 import org.apache.commons.lang.builder.*;
 
@@ -24,6 +27,20 @@ public class ProJPAUtil {
             result instanceof Double ||
             result instanceof String) {
             System.out.print(result.getClass().getName() + ": " + result);
+        } else if (result instanceof List) {
+            List list = (List) result;
+            for (Object item : list) {
+                if (item instanceof Tuple) {
+                    Tuple tuple = (Tuple) item;
+                    List elems = tuple.getElements();
+                    for (Object elm : elems) {
+                        System.out.print(elm.toString());
+                    }
+//                    System.out.println(tuple.toString());
+                }
+            }
+//            System.out.print(ReflectionToStringBuilder.toString(result, ToStringStyle.SHORT_PREFIX_STYLE));
+            System.out.println("\nTotal records: " + list.size());
         } else if (result instanceof Vector) {
             Vector vec = (Vector) result;
             System.out.print(ReflectionToStringBuilder.toString(result, ToStringStyle.SHORT_PREFIX_STYLE));

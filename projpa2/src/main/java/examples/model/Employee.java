@@ -28,7 +28,7 @@ import javax.persistence.TemporalType;
     }
     @Entity
     public class SideB {    // SideB is inverse side
-        @ManyToMany(mappedBy="sidebs")
+        @ManyToMany(mappedBy="sidebs") // SideA does not own the relationship
         Set<SideA> sideas;
     }
 
@@ -76,6 +76,17 @@ import javax.persistence.TemporalType;
         private Person person;
     }
 
+    02/07/17
+    http://www.javaworld.com/article/2077819/java-se/understanding-jpa-part-2-relationships-the-jpa-way.html
+    Bidirectional one-to-one relationships
+
+    Every relationship has two sides:
+
+    The owning side is responsible for propagating the update of the relationship to the database. Usually this is the 
+    side with the foreign key.
+
+    The inverse side maps to the owning side.
+
  */
 @Entity
 public class Employee {
@@ -90,7 +101,7 @@ public class Employee {
     private Address address;
 
     @OneToMany(mappedBy="employee") // Phone contains employee collection
-    private Collection<Phone> phones = new ArrayList<Phone>(); // employee 1:<==>m: phones
+    private Collection<Phone> phones = new ArrayList<Phone>(); // employee (inverse side w/ primary key) 1:<==>m: phones (owing side w/ foreign key)
 
     @ManyToOne
     private Department department;
@@ -108,6 +119,14 @@ public class Employee {
      be ignored when updating the relationship values in the association table).
      So, the side which has the mappedBy attribute is the inverse side. The side which doesn't have the mappedBy 
      attribute is the owner.
+
+     The owning side is responsible for propagating the update of the relationship to the database. Usually this is the 
+     side with the foreign key. The following example, Project is the owning side with foreign key
+
+     http://www.javaworld.com/article/2077819/java-se/understanding-jpa-part-2-relationships-the-jpa-way.html
+     In short,
+     mappedBy= side entity (Employee) is the inverse side, has the primary key
+     The entity below mappedBy, Project, is the owner side, has the following key, is responsible for propagating the update of the relationship to the database 
     */
     @ManyToMany(mappedBy="employees") // Project (owner side) contains employees collection (inverse side) 
     private Collection<Project> projects = new ArrayList<Project>(); // employees (inverse side) m:<==>m: projects (owner side)
