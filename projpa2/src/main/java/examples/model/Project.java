@@ -14,7 +14,7 @@ public class Project {
     @Id
     protected int id;
     protected String name;
-    @ManyToMany
+    @ManyToMany // Project owner side, Employee - inverse side
     protected Collection<Employee> employees = new ArrayList<Employee>();
     
     public int getId() {

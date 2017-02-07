@@ -13,6 +13,26 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+
+    http://stackoverflow.com/questions/37243159/mappedby-in-bi-directional-manytomany-what-is-the-reason
+
+    While this is saying that each Entity "owns" its ManyToMany relationship, the extra join table is redundant in the 
+    typical use case, and the Javadoc says you need a mappedBy annotation. If I decide to have SideA "own" the 
+    relationship, then I add the mappedBy= element to the SideB entity to specify that it doesn't own the relationship:
+
+    @Entity
+    public class SideA {    // SideA is owner side
+        @ManyToMany
+        Set<SideB> sidebs;
+    }
+    @Entity
+    public class SideB {    // SideB is inverse side
+        @ManyToMany(mappedBy="sidebs")
+        Set<SideA> sideas;
+    }
+
+ */
 @Entity
 public class Employee {
     @Id
@@ -21,37 +41,45 @@ public class Employee {
     private long salary;
     @Temporal(TemporalType.DATE)
     private Date startDate;
-    
+
     @OneToOne
     private Address address;
-    
-    @OneToMany(mappedBy="employee")
-    private Collection<Phone> phones = new ArrayList<Phone>();
-    
+
+    @OneToMany(mappedBy="employee") // Phone contains employee collection
+    private Collection<Phone> phones = new ArrayList<Phone>(); // employee 1:<==>m: phones
+
     @ManyToOne
     private Department department;
-    
+
     @ManyToOne
     private Employee manager;
-    
-    @OneToMany(mappedBy="manager")
-    private Collection<Employee> directs = new ArrayList<Employee>();
-    
-    @ManyToMany(mappedBy="employees")
-    private Collection<Project> projects = new ArrayList<Project>();
+
+    @OneToMany(mappedBy="manager") // Employee contains manager field
+    private Collection<Employee> directs = new ArrayList<Employee>(); // manager (owner side) 1:<==>m: employees (inverse side)
+
+    /*
+     http://stackoverflow.com/questions/14111607/manytomanymappedby-foo
+
+     If the association is bidirectional, one side has to be the owner and one side has to be the inverse end (ie. it will
+     be ignored when updating the relationship values in the association table).
+     So, the side which has the mappedBy attribute is the inverse side. The side which doesn't have the mappedBy 
+     attribute is the owner.
+    */
+    @ManyToMany(mappedBy="employees") // Project (owner side) contains employees collection (inverse side) 
+    private Collection<Project> projects = new ArrayList<Project>(); // employees (inverse side) m:<==>m: projects (owner side)
 
     public int getId() {
         return id;
     }
-    
+
     public void setId(int empNo) {
         this.id = empNo;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }

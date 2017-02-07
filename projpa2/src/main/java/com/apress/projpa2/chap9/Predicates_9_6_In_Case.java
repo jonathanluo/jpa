@@ -212,7 +212,6 @@ public class Predicates_9_6_In_Case {
         WHERE p.employees IS NOT EMPTY
      */
     public List<Object[]> findEmployees_Case2() {
-
         System.out.println("findEmployees_Case2()");
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -229,6 +228,28 @@ public class Predicates_9_6_In_Case {
         return q.getResultList();
     }
 
+    /**
+     * Example using JP QL COALESCE expression    p.251
+        SELECT COALESCE(d.name, d.id)
+        FROM Department d
+     */
+    public List<Object> find_Coalesce(boolean case1) {
+        System.out.println("findEmployees_Coalesce(" + case1 + ")");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Object> c = cb.createQuery();
+        Root<Department> dept = c.from(Department.class);
+        if (case1) {
+            c.select(cb.coalesce()
+             .value(dept.get("name"))
+             .value(dept.get("id")));
+        } else {
+            c.select(cb.coalesce(dept.get("name"), dept.get("id")));
+        }
+        TypedQuery<Object> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
     public static void main(String[] args) throws Exception {
         Predicates_9_6_In_Case test = new Predicates_9_6_In_Case();
         ProJPAUtil.printResult(test.findEmployees("NY", "CA"));
@@ -237,5 +258,7 @@ public class Predicates_9_6_In_Case {
         ProJPAUtil.printResult(test.findEmployees_9_6());
         ProJPAUtil.printResult(test.findEmployees_Case());
         ProJPAUtil.printResult(test.findEmployees_Case2());
+        ProJPAUtil.printResult(test.find_Coalesce(true));
+        ProJPAUtil.printResult(test.find_Coalesce(false));
     }
 }
