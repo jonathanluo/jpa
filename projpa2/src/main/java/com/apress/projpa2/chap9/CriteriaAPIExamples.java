@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
 
 import com.apress.projpa2.ProJPAUtil;
 
@@ -110,9 +111,11 @@ public class CriteriaAPIExamples {
         CriteriaQuery<String> c = cb.createQuery(String.class);
         Root<Employee> emp = c.from(Employee.class);
         //c.select(emp.<String>get("name")).distinct(true); // or
-        c.select(emp.<String>get("name"));
+//        c.select(emp.<String>get("name")); // or 
+        //c.select(emp.get("name"));
         c.distinct(true);
-        c.orderBy(cb.asc(emp.<String>get("name")));
+//        c.orderBy(cb.asc(emp.<String>get("name"))); // or
+        c.orderBy(cb.asc(emp.get("name")));
 
         TypedQuery<String> q = em.createQuery(c);
         List<String> retList = q.getResultList(); 
@@ -125,14 +128,52 @@ public class CriteriaAPIExamples {
     }
 
     /**
-     * p. 237 Selecting Multiple Expressions - Tuple
+     * p. 237 SELECT clauses
+     * select employee names excluding duplicates
+     */
+    public List<Employee> findEmployeesSortByName() {
+        System.out.println("p. 237 SELECT clauses - findEmployeesSortByName() - jon");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.distinct(true);
+        c.orderBy(cb.asc(emp.get("name")));
+
+        TypedQuery<Employee> q = em.createQuery(c);
+        List<Employee> retList = q.getResultList(); 
+        return retList;
+    }
+
+    /**
+     * p. 237 SELECT clauses
+     */
+    public List<Employee> findEmployeesSortByNameModel() {
+        System.out.println("p. 237 SELECT clauses - findEmployeesSortByNameModel() - jon");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
+        Root<Employee> emp = c.from(Employee.class);
+        EntityType<Employee> emp_ = emp.getModel();
+        c.distinct(true);
+//        c.orderBy(cb.asc(emp.get(emp_.getSingularAttribute("name", String.class)))); //or
+        c.orderBy(cb.asc(emp.get("name"))); // or
+
+        TypedQuery<Employee> q = em.createQuery(c);
+        List<Employee> retList = q.getResultList(); 
+        return retList;
+    }
+    
+
+    /**
+     * p. 237 Selecting Multiple Expressions - construct Tuple objects while select
      */
     public List<Tuple> tuple() {
-        System.out.println("p. 237 Selecting Multiple Expressions - tuple()");
+        System.out.println("p. 237 Selecting Multiple Expressions - tuple() - construct Tuple objects while select");
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> c= cb.createTupleQuery();
         Root<Employee> emp = c.from(Employee.class);
-        c.select(cb.tuple(emp.get("id"), emp.get("name"))); // select with tuple
+        c.select(cb.tuple(emp.get("id"), emp.get("name"))); // select with tuple object construction
 
         TypedQuery<Tuple> q = em.createQuery(c);
         List<Tuple> retList = q.getResultList();
@@ -242,16 +283,18 @@ public class CriteriaAPIExamples {
 
     public static void main(String[] args) throws Exception {
         CriteriaAPIExamples test = new CriteriaAPIExamples();
-        ProJPAUtil.printResult(test.findDepartments());
-        ProJPAUtil.printResult(test.findEmployees());
-        ProJPAUtil.printResult(test.findEmployeeNames());
-        ProJPAUtil.printResult(test.findEmployeeNamesUnique());
-
-        test.tuple();
-        test.multiselect();
-        test.multiselectTuple();
-        test.multiselectExpressions();
-        test.multiselectAlias();
+//        ProJPAUtil.printResult(test.findDepartments());
+//        ProJPAUtil.printResult(test.findEmployees());
+//        ProJPAUtil.printResult(test.findEmployeeNames());
+//        ProJPAUtil.printResult(test.findEmployeeNamesUnique());
+//        ProJPAUtil.printResult(test.findEmployeesSortByName());
+        ProJPAUtil.printResult(test.findEmployeesSortByNameModel());
+        
+//        test.tuple();
+//        test.multiselect();
+//        test.multiselectTuple();
+//        test.multiselectExpressions();
+//        test.multiselectAlias();
         System.out.print("");
     }
 }
