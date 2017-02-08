@@ -20,43 +20,7 @@ import examples.model.QualityProject;
  * Pro JPA 2 Chapter 9 Criteria API
  *
  * Listing 9-6. In Expressions    - p.249
-
-    mysql> use projpa2
-    mysql> select * from EMPLOYEE;
-    +----+-----------+--------+------------+------------+---------------+------------+
-    | ID | NAME      | SALARY | STARTDATE  | ADDRESS_ID | DEPARTMENT_ID | MANAGER_ID |
-    +----+-----------+--------+------------+------------+---------------+------------+
-    |  1 | John      |  55000 | 2001-01-01 |          1 |             2 |          9 |
-    |  2 | Rob       |  53000 | 2001-05-23 |          2 |             2 |          9 |
-    |  3 | Peter     |  40000 | 2002-08-06 |          3 |             2 |          9 |
-    |  4 | Frank     |  41000 | 2003-02-17 |          4 |             1 |         10 |
-    |  5 | Scott     |  60000 | 2004-11-14 |          5 |             1 |         10 |
-    |  6 | Sue       |  62000 | 2005-08-18 |          6 |             1 |         10 |
-    |  7 | Stephanie |  54000 | 2006-06-07 |          7 |             1 |         10 |
-    |  8 | Jennifer  |  45000 | 1999-08-11 |          8 |             1 |       NULL |
-    |  9 | Sarah     |  52000 | 2002-04-26 |          9 |             2 |         10 |
-    | 10 | Joan      |  59000 | 2003-04-16 |         10 |             1 |       NULL |
-    | 11 | Marcus    |  35000 | 1995-07-22 |       NULL |          NULL |       NULL |
-    | 12 | Joe       |  36000 | 1995-07-22 |       NULL |             3 |         11 |
-    | 13 | Jack      |  43000 | 1995-07-22 |       NULL |             3 |       NULL |
-    +----+-----------+--------+------------+------------+---------------+------------+
- 
-     mysql> select * from ADDRESS;
-    +----+----------------+-------+---------------------+-------+
-    | ID | CITY           | STATE | STREET              | ZIP   |
-    +----+----------------+-------+---------------------+-------+
-    |  1 | New York       | NY    | 123 Apple Tree Cr.  | 10001 |
-    |  2 | Manhattan      | NY    | 654 Stanton Way.    | 10003 |
-    |  3 | New York       | NY    | 99 Queen St.        | 10001 |
-    |  4 | Redwood Shores | CA    | 445 McDonell Cr.    | 90123 |
-    |  5 | San Jose       | CA    | 624 Hamilton Dr.    | 90123 |
-    |  6 | San Jose       | CA    | 724 Coventry Rd.    | 90123 |
-    |  7 | San Francisco  | CA    | 77 Manchester Blvd. | 90123 |
-    |  8 | Moorestown     | NJ    | 53 King St.         | 08057 |
-    |  9 | New York       | NY    | 14 Industrial Ave.  | 10001 |
-    | 10 | Redwood Shores | CA    | 777 High Tech Ln.   | 90123 |
-    +----+----------------+-------+---------------------+-------+
-*
+ *
  */
 public class Predicates_9_6_In_Case {
 
