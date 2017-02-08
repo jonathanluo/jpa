@@ -111,7 +111,7 @@ public class CriteriaAPIExamples {
         CriteriaQuery<String> c = cb.createQuery(String.class);
         Root<Employee> emp = c.from(Employee.class);
         //c.select(emp.<String>get("name")).distinct(true); // or
-//        c.select(emp.<String>get("name")); // or 
+        c.select(emp.<String>get("name")); // or 
         //c.select(emp.get("name"));
         c.distinct(true);
 //        c.orderBy(cb.asc(emp.<String>get("name"))); // or
@@ -210,6 +210,30 @@ public class CriteriaAPIExamples {
         System.out.println();
         return retList;
     }
+    /**
+     * p. 238 Selecting Multiple Expressions - multiselect
+     */
+    public List<Object[]> multiselectEx() {
+        System.out.println("p. 238 Selecting Multiple Expressions - multiselectEx() - employee + more fields - jon");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> c = cb.createQuery(Object[].class);
+        Root<Employee> emp = c.from(Employee.class);
+        c.multiselect(emp.get("id"), emp.get("name"), emp);
+        c.orderBy(cb.asc(emp.<String>get("name")));
+
+        TypedQuery<Object[]> q = em.createQuery(c);
+        List<Object[]> retList = q.getResultList();
+
+        System.out.println("id\tname\t\temployee");
+        System.out.println("==\t==========\t\t===========");
+        for (Object[] item : retList) {
+            System.out.println(item[0] + "\t" + item[1] + "\t" + item[2]);
+        }
+        System.out.println();
+        return retList;
+    }
+
+    //    c.multiselect(emp, emp.get("name"));
 
     /**
      * p. 238 Selecting Multiple Expressions - multiselect w/ tuple
@@ -288,8 +312,8 @@ public class CriteriaAPIExamples {
 //        ProJPAUtil.printResult(test.findEmployeeNames());
 //        ProJPAUtil.printResult(test.findEmployeeNamesUnique());
 //        ProJPAUtil.printResult(test.findEmployeesSortByName());
-        ProJPAUtil.printResult(test.findEmployeesSortByNameModel());
-        
+//        ProJPAUtil.printResult(test.findEmployeesSortByNameModel());
+          ProJPAUtil.printResult(test.multiselectEx());
 //        test.tuple();
 //        test.multiselect();
 //        test.multiselectTuple();
