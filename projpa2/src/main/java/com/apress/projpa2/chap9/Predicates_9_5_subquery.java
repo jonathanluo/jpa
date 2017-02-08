@@ -20,7 +20,7 @@ import examples.model.Project;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
- * Listing 9-5. Employee Search Using Criteria API - sub query                  p.246
+ * Listing 9-5. Employee Search Using Criteria API - sub query     p.246
 
     six possible clauses to be used in a select query:
     SELECT, FROM, WHERE, ORDER BY, GROUP BY and HAVING
@@ -49,8 +49,11 @@ public class Predicates_9_5_subquery {
     }
 
     /**
+     *  projpa2/src/main/resources/examples/Chapter9/03-empSearchSubQuery/src/model/examples/stateless/SearchService.java
      *
-     * /projpa2/src/main/resources/examples/Chapter9/03-empSearchSubQuery/src/model/examples/stateless/SearchService.java
+        SELECT e 
+            FROM Employee e
+            WHERE e IN (SELECT emp FROM Project p JOIN p.employees emp WHERE p.name = :project)
      *
      */
     public List<Employee> findEmployees_Subquery_p246(String name, String deptName, String projectName, String city) {

@@ -1,48 +1,3 @@
-mysql> show tables;
-+-------------------+
-| Tables_in_projpa2 |
-+-------------------+
-| ADDRESS           |
-| DEPARTMENT        |
-| EMPLOYEE          |
-| PHONE             |
-| PROJECT           |
-| PROJECT_EMPLOYEE  |
-+-------------------+
-6 rows in set (0.00 sec)
-
-mysql> select * from ADDRESS;
-+----+----------------+-------+---------------------+-------+
-| ID | CITY           | STATE | STREET              | ZIP   |
-+----+----------------+-------+---------------------+-------+
-|  1 | New York       | NY    | 123 Apple Tree Cr.  | 10001 |
-|  2 | Manhattan      | NY    | 654 Stanton Way.    | 10003 |
-|  3 | New York       | NY    | 99 Queen St.        | 10001 |
-|  4 | Redwood Shores | CA    | 445 McDonell Cr.    | 90123 |
-|  5 | San Jose       | CA    | 624 Hamilton Dr.    | 90123 |
-|  6 | San Jose       | CA    | 724 Coventry Rd.    | 90123 |
-|  7 | San Francisco  | CA    | 77 Manchester Blvd. | 90123 |
-|  8 | Moorestown     | NJ    | 53 King St.         | 08057 |
-|  9 | New York       | NY    | 14 Industrial Ave.  | 10001 |
-| 10 | Redwood Shores | CA    | 777 High Tech Ln.   | 90123 |
-+----+----------------+-------+---------------------+-------+
-10 rows in set (0.00 sec)
-
-mysql> select * from DEPARTMENT;
-+----+-------------+
-| ID | NAME        |
-+----+-------------+
-|  1 | Engineering |
-|  2 | QA          |
-|  3 | Accounting  |
-|  4 | CAEngOtt    |
-|  5 | USEngCal    |
-|  6 | CADocOtt    |
-|  7 | QA_East     |
-|  8 | QANorth     |
-+----+-------------+
-8 rows in set (0.00 sec)
-
 mysql> select * from EMPLOYEE;
 +----+-----------+--------+------------+------------+---------------+------------+
 | ID | NAME      | SALARY | STARTDATE  | ADDRESS_ID | DEPARTMENT_ID | MANAGER_ID |
@@ -62,7 +17,36 @@ mysql> select * from EMPLOYEE;
 | 13 | Jack      |  43000 | 1995-07-22 |       NULL |             3 |       NULL |
 | 14 | John      |  51500 | 1999-07-26 |          2 |             2 |          9 |
 +----+-----------+--------+------------+------------+---------------+------------+
-14 rows in set (0.00 sec)
+
+mysql> select * from ADDRESS;
++----+----------------+-------+---------------------+-------+
+| ID | CITY           | STATE | STREET              | ZIP   |
++----+----------------+-------+---------------------+-------+
+|  1 | New York       | NY    | 123 Apple Tree Cr.  | 10001 |
+|  2 | Manhattan      | NY    | 654 Stanton Way.    | 10003 |
+|  3 | New York       | NY    | 99 Queen St.        | 10001 |
+|  4 | Redwood Shores | CA    | 445 McDonell Cr.    | 90123 |
+|  5 | San Jose       | CA    | 624 Hamilton Dr.    | 90123 |
+|  6 | San Jose       | CA    | 724 Coventry Rd.    | 90123 |
+|  7 | San Francisco  | CA    | 77 Manchester Blvd. | 90123 |
+|  8 | Moorestown     | NJ    | 53 King St.         | 08057 |
+|  9 | New York       | NY    | 14 Industrial Ave.  | 10001 |
+| 10 | Redwood Shores | CA    | 777 High Tech Ln.   | 90123 |
++----+----------------+-------+---------------------+-------+
+
+mysql> select * from DEPARTMENT;
++----+-------------+
+| ID | NAME        |
++----+-------------+
+|  1 | Engineering |
+|  2 | QA          |
+|  3 | Accounting  |
+|  4 | CAEngOtt    |
+|  5 | USEngCal    |
+|  6 | CADocOtt    |
+|  7 | QA_East     |
+|  8 | QANorth     |
++----+-------------+
 
 mysql> select * from PHONE;
 +----+---------------+--------+-------------+
@@ -90,7 +74,6 @@ mysql> select * from PHONE;
 | 20 | (650)555-2346 | Home   |          10 |
 | 21 | (650)555-9874 | Cell   |          10 |
 +----+---------------+--------+-------------+
-21 rows in set (0.00 sec)
 
 mysql> select * from PROJECT;
 +----+-------+--------------------+
@@ -101,7 +84,6 @@ mysql> select * from PROJECT;
 |  3 | QP    | Test Release2      |
 |  4 | P     | Implement Release3 |
 +----+-------+--------------------+
-4 rows in set (0.00 sec)
 
 mysql> select * from PROJECT_EMPLOYEE;
 +--------------+-------------+

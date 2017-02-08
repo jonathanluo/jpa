@@ -7,6 +7,12 @@ import javax.persistence.Tuple;
 
 import org.apache.commons.lang.builder.*;
 
+import examples.model.Address;
+import examples.model.Department;
+import examples.model.Employee;
+import examples.model.Phone;
+import examples.model.Project;
+
 /**
  * Pro JPA 2
  */
@@ -30,6 +36,13 @@ public class ProJPAUtil {
         } else if (result instanceof List) {
             List list = (List) result;
             for (Object item : list) {
+                if (item instanceof Address || 
+                    item instanceof Department ||
+                    item instanceof Employee ||
+                    item instanceof Phone ||
+                    item instanceof Project) {
+                        System.out.println(item);
+                }
                 if (item instanceof Tuple) {
                     Tuple tuple = (Tuple) item;
                     List elems = tuple.getElements();

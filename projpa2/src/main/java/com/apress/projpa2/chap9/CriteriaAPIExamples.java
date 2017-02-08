@@ -87,8 +87,16 @@ public class CriteriaAPIExamples {
         CriteriaQuery<String> c = cb.createQuery(String.class);
         Root<Employee> emp = c.from(Employee.class);
         c.select(emp.<String>get("name"));
+        c.orderBy(cb.asc(emp.<String>get("name")));
+
         TypedQuery<String> q = em.createQuery(c);
-        return q.getResultList();
+        List<String> retList = q.getResultList(); 
+        System.out.println("name");
+        System.out.println("===========");
+        for (String item : retList) {
+            System.out.println(item );
+        }
+        return retList;
     }
 
     /**
@@ -104,8 +112,16 @@ public class CriteriaAPIExamples {
         //c.select(emp.<String>get("name")).distinct(true); // or
         c.select(emp.<String>get("name"));
         c.distinct(true);
+        c.orderBy(cb.asc(emp.<String>get("name")));
+
         TypedQuery<String> q = em.createQuery(c);
-        return q.getResultList();
+        List<String> retList = q.getResultList(); 
+        System.out.println("name");
+        System.out.println("===========");
+        for (String item : retList) {
+            System.out.println(item );
+        }
+        return retList;
     }
 
     /**

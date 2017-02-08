@@ -44,7 +44,7 @@ public class CriteriaAPIJoins {
 
     /**
      * p.240 Inner and Outer Joins
-     * search MapJoin against *.java to get the source code
+     * search MapJoin against resources/examples/*.java to get the source code
      */
     public Collection<Object> executeQueryUsingMetamodel() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -104,7 +104,7 @@ public class CriteriaAPIJoins {
 
     public static void main(String[] args) throws Exception {
         CriteriaAPIJoins test = new CriteriaAPIJoins();
-//        test.printResult(test.executeQueryUsingMetamodel());
+//        ProJPAUtil.printResult(test.executeQueryUsingMetamodel());
         ProJPAUtil.printResult(test.fetchJoin());
         ProJPAUtil.printResult(test.fetchJoin2());
         System.out.print("");
