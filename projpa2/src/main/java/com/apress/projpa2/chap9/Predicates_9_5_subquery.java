@@ -20,20 +20,32 @@ import examples.model.Project;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
- * Listing 9-5. Employee Search Using Criteria API - sub query     p.246
 
-    six possible clauses to be used in a select query:
-    SELECT, FROM, WHERE, ORDER BY, GROUP BY and HAVING
+    Root<Employee> emp = c.from(Employee.class);
+    c.select(emp);
+    Join<Employee,Project> project = emp.join("projects", JoinType.LEFT);
 
-    Table 9-1.  Criteria API Select Query Clause Methods           p.234
-    JP QL Clause    Criteria API Interface  Method
-    SELECT          CriteriaQuery           select()
-                    Subquery                select()
-    FROM            AbstractQuery           from()
-    WHERE           AbstractQuery           where()
-    ORDER BY        CriteriaQuery           orderBy()
-    GROUP BY        AbstractQuery           groupBy()
-    HAVING          AbstractQuery           having()
+    Subquery<Integer> sq = c.subquery(Integer.class);
+    Root<Project> project = sq.from(Project.class);
+    Join<Project,Employee> sqEmp = project.join("employees");
+
+    Subquery<Project> sq = c.subquery(Project.class);
+    Root<Project> project = sq.from(Project.class);
+    Join<Project,Employee> sqEmp = project.join("employees");
+
+    Root object obtained by from() method only accepts a persistent class type
+    Use correlate in sub query
+
+    Subquery<Project> sq = c.subquery(Project.class);
+    Root<Employee> sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
+    Join<Employee,Project> project = sqEmp.join("projects");
+
+    CriteriaQuery<Project> c = cb.createQuery(Project.class);
+    Root<Project> project = c.from(Project.class);
+    Join<Project,Employee> emp = project.join("employees");
+    Subquery<Double> sq = c.subquery(Double.class);
+    Join<Project,Employee> sqEmp = sq.correlate(emp);
+    Join<Employee,Employee> directs = sqEmp.join("directs");
  *
  */
 public class Predicates_9_5_subquery {
