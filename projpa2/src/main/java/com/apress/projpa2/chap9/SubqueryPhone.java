@@ -6,13 +6,13 @@ import java.util.logging.Logger;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import javax.persistence.metamodel.Bindable;
 
 import com.apress.projpa2.ProJPAUtil;
 
@@ -90,8 +90,6 @@ public class SubqueryPhone {
 //          Join<Employee,Project> project = sqEmp.join("projects"); // or
 //            Join<Employee,Project> project = sqEmp.join("projects", JoinType.LEFT); // or
             phone = sqEmp.join("phones", JoinType.INNER);
-            Bindable<Phone> phone1 = phone.getModel();
-//            Phone _model1 = phone1.getBindableJavaType()._model;
             sq.select(phone);
 //          sq.where(cb.like(phone.get("name"), cb.parameter(String.class,"project")));
             criteria.add(cb.exists(sq));
@@ -126,8 +124,41 @@ public class SubqueryPhone {
     }
 
 
+    /**
+     * Simulate audit log UI sorting
+     */
+    public List<Employee> findEmployees_join_Phone() {
+        System.out.println("findEmployees_join_Phone()");
+
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
+        Root<Employee> emp = c.from(Employee.class); // A root in a criteria query corresponds to an identification variable in JP QL
+                                                     // Calls to the from() method are additive. Each call adds another root to the query
+        c.select(emp);
+        //c.distinct(true); // distinct no longer need by using sub query
+
+        List<Predicate> criteria = new ArrayList<Predicate>();
+
+        Join<Employee, Phone> join = emp.join("phones");
+        Expression<String> path = join.get("number");
+        criteria.add(cb.like(path, "%"));
+
+        if (criteria.size() == 0) {
+            throw new RuntimeException("no criteria");
+        } else if (criteria.size() == 1) {
+            c.where(criteria.get(0));
+        } else {
+            c.where(cb.and(criteria.toArray(new Predicate[0])));
+        }
+
+        c.orderBy(cb.asc(emp.get("id")));
+        TypedQuery<Employee> q = em.createQuery(c);
+        return q.getResultList();
+    }
+
     public static void main(String[] args) throws Exception {
         SubqueryPhone test = new SubqueryPhone();
-        ProJPAUtil.printResult(test.findEmployees_Subquery_Phone("", ""));
+//        ProJPAUtil.printResult(test.findEmployees_Subquery_Phone("", ""));
+        ProJPAUtil.printResult(test.findEmployees_join_Phone());
     }
 }
