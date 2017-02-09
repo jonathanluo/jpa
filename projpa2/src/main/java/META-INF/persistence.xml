@@ -9,7 +9,7 @@
         > system pwd
         > create database projpa2;
         > use projpa2
-        > source db.sql
+        > source testdb.sql
      -->
     <persistence-unit name="jpqlExamples">
         <class>examples.model.Employee</class>

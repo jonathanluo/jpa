@@ -4,7 +4,7 @@ mysql -u dcfg -p
 > system pwd
 > create database projpa2;
 > use projpa2
-> source db.sql
+> source testdb.sql
 
 mysql> select * from EMPLOYEE;
 +----+-----------+--------+------------+------------+---------------+------------+

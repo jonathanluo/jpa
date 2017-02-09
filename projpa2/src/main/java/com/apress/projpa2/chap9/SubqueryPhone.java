@@ -103,13 +103,12 @@ public class SubqueryPhone {
             c.where(cb.and(criteria.toArray(new Predicate[0])));
         }
         /*
-        c.orderBy(cb.asc(phone.get("number"))); 
+        c.orderBy(cb.asc(phone.get("number"))); // error
         QueryException Exception Description: The query has not been defined correctly, the expression builder is missing.  
         For sub and parallel queries ensure the queries builder is always on the left.
         Query: ReadAllQuery(referenceClass=Employee )
         */
-//        c.orderBy(cb.asc(phone.get("number"))); 
-//        c.orderBy(cb.asc(emp.get("id")));//ok
+        c.orderBy(cb.asc(emp.get("id")));//ok
 //        c.orderBy(cb.asc(emp.get("name")));
 
         TypedQuery<Employee> q = em.createQuery(c);
@@ -125,10 +124,21 @@ public class SubqueryPhone {
 
 
     /**
-     * Simulate audit log UI sorting
+     * Simulate audit UI sorting
+     * c.orderBy(cb.asc(emp.get("id")));
+     * SELECT t1.ID, t1.NAME, t1.SALARY, t1.STARTDATE, t1.DEPARTMENT_ID, t1.MANAGER_ID, t1.ADDRESS_ID
+     * FROM PHONE t0, EMPLOYEE t1 WHERE (t0.NUMBER LIKE ? AND (t0.EMPLOYEE_ID = t1.ID)) ORDER BY t1.ID ASC
+     * 
+     * c.orderBy(cb.asc(emp.get("id")));
+     * c.orderBy(cb.asc(join.get("number")));
+     * SELECT t1.ID, t1.NAME, t1.SALARY, t1.STARTDATE, t1.DEPARTMENT_ID, t1.MANAGER_ID, t1.ADDRESS_ID FROM PHONE t0, 
+     * EMPLOYEE t1 WHERE (t0.NUMBER LIKE ? AND (t0.EMPLOYEE_ID = t1.ID)) ORDER BY t0.NUMBER ASC
+     * 
+     * @param phoneType 'Home', 'Office', 'Cell', 'All'
+     * @return
      */
-    public List<Employee> findEmployees_join_Phone() {
-        System.out.println("findEmployees_join_Phone()");
+    public List<Employee> findEmployees_join_Phone(String phoneType) {
+        System.out.println("findEmployees_join_Phone('" + phoneType + "')");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
@@ -142,6 +152,10 @@ public class SubqueryPhone {
         Join<Employee, Phone> join = emp.join("phones");
         Expression<String> path = join.get("number");
         criteria.add(cb.like(path, "%"));
+        // filtered by phone type
+        if (!"All".equals(phoneType)) {
+            criteria.add(cb.like(join.get("type"), phoneType + "%"));
+        }
 
         if (criteria.size() == 0) {
             throw new RuntimeException("no criteria");
@@ -152,13 +166,17 @@ public class SubqueryPhone {
         }
 
         c.orderBy(cb.asc(emp.get("id")));
+        c.orderBy(cb.asc(join.get("number")));
         TypedQuery<Employee> q = em.createQuery(c);
         return q.getResultList();
     }
 
     public static void main(String[] args) throws Exception {
         SubqueryPhone test = new SubqueryPhone();
-//        ProJPAUtil.printResult(test.findEmployees_Subquery_Phone("", ""));
-        ProJPAUtil.printResult(test.findEmployees_join_Phone());
+        ProJPAUtil.printResult(test.findEmployees_Subquery_Phone("", ""));
+        ProJPAUtil.printResult(test.findEmployees_join_Phone("Home"));
+        ProJPAUtil.printResult(test.findEmployees_join_Phone("Office"));
+        ProJPAUtil.printResult(test.findEmployees_join_Phone("Cell"));
+        ProJPAUtil.printResult(test.findEmployees_join_Phone("All"));
     }
 }
