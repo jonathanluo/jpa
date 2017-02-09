@@ -20,6 +20,7 @@ import examples.model.Project;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
+   See also SubqueryTest.java
 
     Root<Employee> emp = c.from(Employee.class);
     c.select(emp);

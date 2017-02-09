@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -63,7 +64,7 @@ public class SubqueryTest {
         System.out.println("findEmployees_Subquery_correlate_unique('" + name + "%', " + projectName + ") - jon");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Employee> c = cb.createQuery(Employee.class); // c - criteria query definition
+        CriteriaQuery<Employee> c = cb.createQuery(Employee.class);
         Root<Employee> emp = c.from(Employee.class); // A root in a criteria query corresponds to an identification variable in JP QL
                                                      // Calls to the from() method are additive. Each call adds another root to the query
         c.select(emp);
@@ -87,7 +88,9 @@ public class SubqueryTest {
              */
             Subquery<Project> sq = c.subquery(Project.class);
             Root<Employee> sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
-            Join<Employee,Project> project = sqEmp.join("projects");
+//            Join<Employee,Project> project = sqEmp.join("projects", JoinType.LEFT);
+            Join<Employee,Project> project = sqEmp.join("projects", JoinType.INNER);
+//            Join<Project, Employee> project = sqEmp.join("projects", JoinType.INNER); // to test
             sq.select(project)
               .where(cb.like(project.get("name"), cb.parameter(String.class,"project")));
             criteria.add(cb.exists(sq));
@@ -100,7 +103,8 @@ public class SubqueryTest {
         } else {
             c.where(cb.and(criteria.toArray(new Predicate[0])));
         }
-        c.orderBy(cb.asc(emp.get("name")));
+        c.orderBy(cb.asc(emp.get("id")));
+//        c.orderBy(cb.asc(emp.get("name")));
 
         TypedQuery<Employee> q = em.createQuery(c);
         if (name != null) { 
