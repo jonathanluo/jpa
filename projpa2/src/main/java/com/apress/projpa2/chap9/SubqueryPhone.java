@@ -16,7 +16,7 @@ import javax.persistence.criteria.Subquery;
 import com.apress.projpa2.ProJPAUtil;
 
 import examples.model.Employee;
-import examples.model.Project;
+import examples.model.Phone;
 
 /**
  * Pro JPA 2 Chapter 9 Criteria API
@@ -48,19 +48,22 @@ import examples.model.Project;
     Join<Employee,Employee> directs = sqEmp.join("directs");
  *
  */
-public class SubqueryTest {
+public class SubqueryPhone {
 
-    private static final Logger LOGGER = Logger.getLogger(SubqueryTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SubqueryProject.class.getName());
 
     EntityManager em;
 
-    public SubqueryTest() {
+    public SubqueryPhone() {
         String unitName = "jpqlExamples"; // = args[0];
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(unitName);
         em = emf.createEntityManager();
     }
 
-    public List<Employee> findEmployees_Subquery_correlate_unique(String name, String projectName) {
+    /**
+     * TODO - sort by fields in Phones or Projects
+     */
+    public List<Employee> findEmployees_Subquery_Phone(String name, String projectName) {
         System.out.println("findEmployees_Subquery_correlate_unique('" + name + "%', " + projectName + ") - jon");
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -86,13 +89,13 @@ public class SubqueryTest {
              * SELECT e FROM Employee e WHERE EXISTS 
              *      (SELECT p FROM e.projects p WHERE p.name = :name)
              */
-            Subquery<Project> sq = c.subquery(Project.class);
+            Subquery<Phone> sq = c.subquery(Phone.class);
             Root<Employee> sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
-//            Join<Employee,Project> project = sqEmp.join("projects", JoinType.LEFT);
-            Join<Employee,Project> project = sqEmp.join("projects", JoinType.INNER);
-//            Join<Project, Employee> project = sqEmp.join("projects", JoinType.INNER); // to test
-            sq.select(project)
-              .where(cb.like(project.get("name"), cb.parameter(String.class,"project")));
+//          Join<Employee,Project> project = sqEmp.join("projects"); // or
+//            Join<Employee,Project> project = sqEmp.join("projects", JoinType.LEFT); // or
+            Join<Employee,Phone> phone = sqEmp.join("phones", JoinType.INNER); 
+            sq.select(phone);
+//              .where(cb.like(phone.get("name"), cb.parameter(String.class,"project")));
             criteria.add(cb.exists(sq));
         }
 
@@ -119,7 +122,7 @@ public class SubqueryTest {
 
 
     public static void main(String[] args) throws Exception {
-        SubqueryTest test = new SubqueryTest();
-        ProJPAUtil.printResult(test.findEmployees_Subquery_correlate_unique("", ""));
+        SubqueryPhone test = new SubqueryPhone();
+        ProJPAUtil.printResult(test.findEmployees_Subquery_Phone("", ""));
     }
 }
