@@ -12,6 +12,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import javax.persistence.metamodel.Bindable;
 
 import com.apress.projpa2.ProJPAUtil;
 
@@ -81,21 +82,18 @@ public class SubqueryPhone {
             Predicate p2 = cb.like(emp.get("name"), pe2);
             criteria.add(cb.or(p1, p2));
         }
+        Join<Employee,Phone> phone = null; 
+        Root<Employee> sqEmp = null;
         if (projectName != null) {
-            /*
-             * Root object obtained by from() method only accepts a persistent class type
-             * Use correlate in sub query
-             *
-             * SELECT e FROM Employee e WHERE EXISTS 
-             *      (SELECT p FROM e.projects p WHERE p.name = :name)
-             */
             Subquery<Phone> sq = c.subquery(Phone.class);
-            Root<Employee> sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
+            sqEmp = sq.correlate(emp); // replace Root<Project> project = sq.from(Project.class);
 //          Join<Employee,Project> project = sqEmp.join("projects"); // or
 //            Join<Employee,Project> project = sqEmp.join("projects", JoinType.LEFT); // or
-            Join<Employee,Phone> phone = sqEmp.join("phones", JoinType.INNER); 
+            phone = sqEmp.join("phones", JoinType.INNER);
+            Bindable<Phone> phone1 = phone.getModel();
+//            Phone _model1 = phone1.getBindableJavaType()._model;
             sq.select(phone);
-//              .where(cb.like(phone.get("name"), cb.parameter(String.class,"project")));
+//          sq.where(cb.like(phone.get("name"), cb.parameter(String.class,"project")));
             criteria.add(cb.exists(sq));
         }
 
@@ -106,7 +104,14 @@ public class SubqueryPhone {
         } else {
             c.where(cb.and(criteria.toArray(new Predicate[0])));
         }
-        c.orderBy(cb.asc(emp.get("id")));
+        /*
+        c.orderBy(cb.asc(phone.get("number"))); 
+        QueryException Exception Description: The query has not been defined correctly, the expression builder is missing.  
+        For sub and parallel queries ensure the queries builder is always on the left.
+        Query: ReadAllQuery(referenceClass=Employee )
+        */
+//        c.orderBy(cb.asc(phone.get("number"))); 
+//        c.orderBy(cb.asc(emp.get("id")));//ok
 //        c.orderBy(cb.asc(emp.get("name")));
 
         TypedQuery<Employee> q = em.createQuery(c);
