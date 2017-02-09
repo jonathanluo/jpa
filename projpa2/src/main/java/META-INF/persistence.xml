@@ -4,7 +4,7 @@
 
     <!-- https://github.com/apress/pro-jpa-2 
         Create sample database tables for Pro JPA 2
-        cd ~/Documents/ebook/jpa2/pro-jpa-2-master/examples/Chapter8/jpqlExamples/etc/sql
+        cd ./projpa2/src/main/resources/examples/Chapter8/jpqlExamples/etc/sql/
         mysql -u dcfg -p
         > system pwd
         > create database projpa2;

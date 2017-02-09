@@ -1,5 +1,5 @@
 Create sample database tables for Pro JPA 2
-cd /projpa2/src/main/resources/examples/Chapter8/jpqlExamples/etc/sql/
+cd ./projpa2/src/main/resources/examples/Chapter8/jpqlExamples/etc/sql/
 mysql -u dcfg -p
 > system pwd
 > create database projpa2;

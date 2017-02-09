@@ -49,7 +49,7 @@ import examples.model.Project;
  */
 public class SubqueryTest {
 
-    private static final Logger LOGGER = Logger.getLogger(Predicates_9_5_subquery.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SubqueryTest.class.getName());
 
     EntityManager em;
 
@@ -100,6 +100,7 @@ public class SubqueryTest {
         } else {
             c.where(cb.and(criteria.toArray(new Predicate[0])));
         }
+        c.orderBy(cb.asc(emp.get("name")));
 
         TypedQuery<Employee> q = em.createQuery(c);
         if (name != null) { 
