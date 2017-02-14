@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- *
+ * Java SE 8: Lambda Quick Start
+ * http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/Lambda-QuickStart/index.html#section1
+ * 
  * @author MikeW
  */
 public class RoboCallTest04 {
