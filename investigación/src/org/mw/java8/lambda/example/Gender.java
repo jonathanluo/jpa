@@ -1,4 +1,4 @@
-package org.mw.java8.lambda;
+package org.mw.java8.lambda.example;
 
 /**
  * @author MikeW
