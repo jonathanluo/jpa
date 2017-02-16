@@ -1,5 +1,7 @@
 package org.mw.generics;
 
+import java.util.ArrayList;
+
 /**
  * https://docs.oracle.com/javase/tutorial/java/generics/methods.html
  */
@@ -29,6 +31,7 @@ public class Util {
 		Pair<Integer, String> p2 = new Pair<>(2, "pear");
 		boolean same = Util.<Integer, String>compare(p1, p2);
 		System.out.println(same);
+		ArrayList<String> tt = new ArrayList<>();
 	}
 
 }
