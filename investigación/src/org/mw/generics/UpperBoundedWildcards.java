@@ -22,7 +22,22 @@ public class UpperBoundedWildcards {
 	    System.out.println();
 	}
 
-    public static void main(String[] argv) {
+	/**
+	 * https://docs.oracle.com/javase/tutorial/java/generics/lowerBounded.html
+	 */
+	public static void addNumbers(List<? super Integer> list) {
+	    for (int i = 1; i <= 10; i++) {
+	        list.add(i);
+	    }
+	}
+
+	public static void addNumbers2(List<? super Number> list) {
+	    for (int i = 1; i <= 10; i++) {
+	        list.add(i);
+	    }
+	}
+
+	public static void main(String[] argv) {
     	List<Object> li0 = Arrays.asList(1, 2, 3);
     	printList(li0);
 
@@ -32,6 +47,13 @@ public class UpperBoundedWildcards {
 //    	printList(ls1); // compiler error
     	printList2(li1);
     	printList2(ls1);
+    	//
+    	addNumbers(li0);
+    	addNumbers(li1);
+//    	addNumbers(ls1); // error
+    	//
+    	addNumbers2(li0);  // Object is super type of Number, okay
+//    	addNumbers2(li1); // Integer is sub type of Number, error
     }
 
 }
