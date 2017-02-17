@@ -16,6 +16,6 @@ public class WildcardError {
     void foo(List<?> i) {
     // error msg:The method set(int, capture#1-of ?) in the type List<capture#1-of ?> is not applicable for the 
     // arguments (int, capture#2-of ?)
-      i.set(0, i.get(0));
+//      i.set(0, i.get(0));
     }
 }
