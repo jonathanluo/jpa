@@ -1,6 +1,7 @@
 package org.mw.java7;
 
 /**
+ * http://docs.oracle.com/javase/7/docs/technotes/guides/language/enhancements.html#javase7
  * http://docs.oracle.com/javase/7/docs/technotes/guides/language/underscores-literals.html
  */
 public class UnderscoresInNumericLiterals {
