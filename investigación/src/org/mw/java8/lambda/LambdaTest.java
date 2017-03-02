@@ -20,6 +20,8 @@ package org.mw.java8.lambda;
  */
 public class LambdaTest {
 
+    private static final String NEWLINE = "\n";
+
     public static void main(String args[]) {
         LambdaTest tester = new LambdaTest();
 
@@ -37,10 +39,14 @@ public class LambdaTest {
 
         int op1 = 20;
         int op2 = 5;
-        System.out.println("20 + 5 = " + tester.operate(op1, op2, addition));
-        System.out.println("20 - 5 = " + tester.operate(op1, op2, subtraction));
-        System.out.println("20 x 5 = " + tester.operate(op1, op2, multiplication));
-        System.out.println("20 / 5 = " + tester.operate(op1, op2, division));
+
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("20 + 5 = " + tester.operate(op1, op2, addition)).append(NEWLINE);
+        sb.append("20 - 5 = " + tester.operate(op1, op2, subtraction)).append(NEWLINE);
+        sb.append("20 x 5 = " + tester.operate(op1, op2, multiplication)).append(NEWLINE);
+        sb.append("20 / 5 = " + tester.operate(op1, op2, division)).append(NEWLINE);
+        System.out.print(sb.toString());
 
         //with parenthesis
         GreetingService greetService1 = (message) -> System.out.println("Hello " + message);
