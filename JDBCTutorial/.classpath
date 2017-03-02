@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="classes" path="src"/>
+	<classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+	<classpathentry kind="con" path="./classes"/>
+	<classpathentry kind="lib" path="./lib/JDBCTutorial.jar"/>
+	<classpathentry kind="con" path="./JDBCTutorial/C:/apache/xalan-j_2_7_1/xalan.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
