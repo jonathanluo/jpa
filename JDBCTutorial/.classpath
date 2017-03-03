@@ -4,6 +4,6 @@
 	<classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
 	<classpathentry kind="con" path="./classes"/>
 	<classpathentry kind="lib" path="./lib/JDBCTutorial.jar"/>
-	<classpathentry kind="con" path="./JDBCTutorial/C:/apache/xalan-j_2_7_1/xalan.jar"/>
+	<classpathentry kind="con" path="/j01/lib/xalan-j_2_7_1/xalan.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
