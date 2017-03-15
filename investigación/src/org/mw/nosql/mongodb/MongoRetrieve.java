@@ -1,4 +1,4 @@
-package org.mw.mongodb;
+package org.mw.nosql.mongodb;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -19,7 +19,7 @@ import java.util.Arrays;
  * https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/
  *   mongo-java-driver-3.2.2.jar or higher
  */
-public class MongoCreateCollection {
+public class MongoRetrieve {
 
    public static void main( String args[] ) {
 
@@ -33,10 +33,28 @@ public class MongoCreateCollection {
          System.out.println("Connect to database successfully");
 //         boolean auth = db.authenticate(myUserName, myPassword);
 //         System.out.println("Authentication: "+auth);
-         DBCollection coll = db.createCollection("mycol2", new BasicDBObject());
-         System.out.println("Collection created successfully");
+//         DBCollection coll = db.createCollection("mycol2", new BasicDBObject());
+//         System.out.println("Collection created successfully");
+
+         DBCollection coll = db.getCollection("mycol");
+         System.out.println("Collection mycol selected successfully");
+
+         DBCursor cursor = coll.find();
+         System.out.println("================= show all documents =================");
+         printDocuments(cursor);
+
       }catch(Exception e){
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
       }
    }
+
+   private static void printDocuments(DBCursor cursor) {
+       int i = 1;
+       while (cursor.hasNext()) { 
+          System.out.println("Document: "+i); 
+          System.out.println(cursor.next()); 
+          i++;
+       }
+   }
+
 }

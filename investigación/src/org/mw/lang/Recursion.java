@@ -1,7 +1,9 @@
 package org.mw.lang;
 
 /**
- * http://introcs.cs.princeton.edu/java/23recursion/
+ * Recursion
+ * 1. A simple base case (or cases) - a terminating scenario that does not use recursion to produce an answer
+ * 2. A set of rules that reduce all other cases toward the base case
  */
 public class Recursion {
 

@@ -1,4 +1,4 @@
-package org.mw.mongodb;
+package org.mw.nosql.mongodb;
 
 import com.mongodb.MongoClient;
 
