@@ -4,10 +4,8 @@ import java.util.*;
 import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.*;
 
 /**
  * https://www.tutorialspoint.com/map_reduce/implementation_in_hadoop.htm
@@ -65,7 +63,7 @@ public class ProcessUnits
 	
    public static void main(String args[])throws Exception
    {
-      JobConf conf = new JobConf(Eleunits.class);
+      JobConf conf = new JobConf(ProcessUnits.class);
 		
       conf.setJobName("max_eletricityunits");
 		
