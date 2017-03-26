@@ -17,12 +17,22 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * https://www.tutorialspoint.com/map_reduce/map_reduce_combiners.htm
- * Step 4
- * $HADOOP_HOME/bin/hadoop fs -mkdir input_dir		# not working
- * ==>
- * $HADOOP_HOME/bin/hadoop fs -mkdir -p input_dir	# 1st time need -p, subsequently -mkdir calls w/o -p is okay
- * 
- * Input data: input.txt
+
+   cd /home/hadoop
+   mkdir units
+   cp files hadoop-core-1.2.1.jar, WordCount.java, ProcessUnits.java, input.txt, sample.txt to /home/hadoop
+   javac -classpath hadoop-core-1.2.1.jar -d units *.java
+   jar -cvf units.jar -C units/ .
+
+   start-dfs.sh
+   start-yarn.sh
+   hadoop fs -mkdir -p input_dir	# 1st time need -p, subsequently -mkdir calls w/o -p is okay
+   hadoop fs -put /home/hadoop/input.txt input_dir
+   hadoop fs -ls input_dir/
+
+   hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
+
+   Input data: input.txt
  */
 public class WordCount {
 

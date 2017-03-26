@@ -10,7 +10,23 @@ import org.apache.hadoop.mapred.*;
 /**
  * https://www.tutorialspoint.com/map_reduce/implementation_in_hadoop.htm
  * http://a-hadoop.blogspot.com/2015/06/hadoop-mapreduce-mapreduce-is-framework.html
- *
+
+   cd /home/hadoop
+   mkdir units
+   cp files hadoop-core-1.2.1.jar, WordCount.java, ProcessUnits.java, input.txt, sample.txt to /home/hadoop
+   javac -classpath hadoop-core-1.2.1.jar -d units *.java
+   jar -cvf units.jar -C units/ .
+
+   start-dfs.sh
+   start-yarn.sh
+
+   hadoop fs -mkdir -p input_dir
+   hadoop fs -put /home/hadoop/sample.txt input_dir
+   hadoop fs -ls input_dir/
+   hadoop fs -rmdir output_dir/
+
+   hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
+
  * Input data: sample.txt
  */
 public class ProcessUnits
