@@ -1,0 +1,223 @@
+moonwave@ubuntu:/home/hadoop$ hadoop fs -ls input_dir/
+Found 2 items
+-rw-r--r--   1 moonwave supergroup        118 2017-03-25 21:00 input_dir/input.txt
+-rw-r--r--   1 moonwave supergroup        344 2017-03-25 21:13 input_dir/sample.txt
+
+/home/hadoop$ hadoop jar units.jar org.mw.bigdata.hadoop.WordCount input_dir output_dir
+17/03/25 21:55:27 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+17/03/25 21:55:27 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+17/03/25 21:55:27 INFO input.FileInputFormat: Total input paths to process : 2
+17/03/25 21:55:28 INFO mapreduce.JobSubmitter: number of splits:2
+17/03/25 21:55:28 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1490500543231_0003
+17/03/25 21:55:28 INFO impl.YarnClientImpl: Submitted application application_1490500543231_0003
+17/03/25 21:55:28 INFO mapreduce.Job: The url to track the job: http://ubuntu:8088/proxy/application_1490500543231_0003/
+17/03/25 21:55:28 INFO mapreduce.Job: Running job: job_1490500543231_0003
+17/03/25 21:55:33 INFO mapreduce.Job: Job job_1490500543231_0003 running in uber mode : false
+17/03/25 21:55:33 INFO mapreduce.Job:  map 0% reduce 0%
+17/03/25 21:55:38 INFO mapreduce.Job:  map 100% reduce 0%
+17/03/25 21:55:43 INFO mapreduce.Job:  map 100% reduce 100%
+17/03/25 21:55:45 INFO mapreduce.Job: Job job_1490500543231_0003 completed successfully
+17/03/25 21:55:45 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=454
+		FILE: Number of bytes written=356500
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=703
+		HDFS: Number of bytes written=273
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=5864
+		Total time spent by all reduces in occupied slots (ms)=2110
+		Total time spent by all map tasks (ms)=5864
+		Total time spent by all reduce tasks (ms)=2110
+		Total vcore-milliseconds taken by all map tasks=5864
+		Total vcore-milliseconds taken by all reduce tasks=2110
+		Total megabyte-milliseconds taken by all map tasks=6004736
+		Total megabyte-milliseconds taken by all reduce tasks=2160640
+	Map-Reduce Framework
+		Map input records=9
+		Map output records=92
+		Map output bytes=705
+		Map output materialized bytes=460
+		Input split bytes=241
+		Combine input records=92
+		Combine output records=44
+		Reduce input groups=44
+		Reduce shuffle bytes=460
+		Reduce input records=44
+		Reduce output records=44
+		Spilled Records=88
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=245
+		CPU time spent (ms)=2260
+		Physical memory (bytes) snapshot=734486528
+		Virtual memory (bytes) snapshot=5746102272
+		Total committed heap usage (bytes)=550502400
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=462
+	File Output Format Counters 
+		Bytes Written=273
+		 
+/home/hadoop$ hadoop fs -ls output_dir/
+Found 2 items
+-rw-r--r--   1 moonwave supergroup          0 2017-03-25 21:55 output_dir/_SUCCESS
+-rw-r--r--   1 moonwave supergroup        273 2017-03-25 21:55 output_dir/part-r-00000
+
+$ hadoop fs -cat output_dir/part-r-00000
+00      1
+1979    1
+1980    1
+1981    1
+1984    1
+1985    1
+2       1
+23      2
+24      1
+25      3
+26      6
+27      1
+28      3
+29      1
+30      4
+31      4
+32      3
+33      1
+34      5
+35      1
+36      2
+38      4
+39      11
+40      3
+41      4
+42      1
+43      2
+45      1
+High        1
+How         1
+Java        3
+Machine     1
+Object      1
+Performance 1
+Virtual     1
+What        3
+about       1
+by          1
+do          2
+enabled     1
+is          1
+know        1
+mean        1
+you         2
+
+$ hadoop fs -get output_dir/* ~/Downloads/
+
+-- =============================================================================
+/home/hadoop$ hadoop fs -ls input_dir/
+Found 1 items
+-rw-r--r--   1 moonwave supergroup        118 2017-03-25 21:00 input_dir/input.txt
+
+/home/hadoop$ hadoop jar units.jar org.mw.bigdata.hadoop.WordCount input_dir output_dir
+
+17/03/25 22:06:30 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+17/03/25 22:06:31 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+17/03/25 22:06:31 INFO input.FileInputFormat: Total input paths to process : 1
+17/03/25 22:06:31 INFO mapreduce.JobSubmitter: number of splits:1
+17/03/25 22:06:31 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1490500543231_0004
+17/03/25 22:06:32 INFO impl.YarnClientImpl: Submitted application application_1490500543231_0004
+17/03/25 22:06:32 INFO mapreduce.Job: The url to track the job: http://ubuntu:8088/proxy/application_1490500543231_0004/
+17/03/25 22:06:32 INFO mapreduce.Job: Running job: job_1490500543231_0004
+17/03/25 22:06:37 INFO mapreduce.Job: Job job_1490500543231_0004 running in uber mode : false
+17/03/25 22:06:37 INFO mapreduce.Job:  map 0% reduce 0%
+17/03/25 22:06:41 INFO mapreduce.Job:  map 100% reduce 0%
+17/03/25 22:06:46 INFO mapreduce.Job:  map 100% reduce 100%
+17/03/25 22:06:46 INFO mapreduce.Job: Job job_1490500543231_0004 completed successfully
+17/03/25 22:06:46 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=193
+		FILE: Number of bytes written=237425
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=238
+		HDFS: Number of bytes written=123
+		HDFS: Number of read operations=6
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=1
+		Launched reduce tasks=1
+		Data-local map tasks=1
+		Total time spent by all maps in occupied slots (ms)=2060
+		Total time spent by all reduces in occupied slots (ms)=2283
+		Total time spent by all map tasks (ms)=2060
+		Total time spent by all reduce tasks (ms)=2283
+		Total vcore-milliseconds taken by all map tasks=2060
+		Total vcore-milliseconds taken by all reduce tasks=2283
+		Total megabyte-milliseconds taken by all map tasks=2109440
+		Total megabyte-milliseconds taken by all reduce tasks=2337792
+	Map-Reduce Framework
+		Map input records=4
+		Map output records=22
+		Map output bytes=206
+		Map output materialized bytes=193
+		Input split bytes=120
+		Combine input records=22
+		Combine output records=16
+		Reduce input groups=16
+		Reduce shuffle bytes=193
+		Reduce input records=16
+		Reduce output records=16
+		Spilled Records=32
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=128
+		CPU time spent (ms)=1190
+		Physical memory (bytes) snapshot=450912256
+		Virtual memory (bytes) snapshot=3832680448
+		Total committed heap usage (bytes)=342360064
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=118
+	File Output Format Counters 
+		Bytes Written=123
+
+$ hadoop fs -cat output_dir/part-r-00000
+High        1
+How         1
+Java        3
+Machine     1
+Object      1
+Performance 1
+Virtual     1
+What        3
+about       1
+by          1
+do          2
+enabled     1
+is          1
+know        1
+mean        1
+you         2

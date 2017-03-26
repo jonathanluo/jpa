@@ -29,8 +29,18 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
    hadoop fs -mkdir -p input_dir	# 1st time need -p, subsequently -mkdir calls w/o -p is okay
    hadoop fs -put /home/hadoop/input.txt input_dir
    hadoop fs -ls input_dir/
+   hadoop fs -rmdir output_dir/
+   hadoop fs -rm -r output_dir/		# output_dir must not exist before execute the following command 
 
-   hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
+   hadoop jar units.jar org.mw.bigdata.hadoop.WordCount input_dir output_dir
+
+   hadoop fs -ls output_dir/
+   hadoop fs -cat output_dir/part-r-00000
+
+   hadoop fs -get input_dir    ~/Downloads/
+   hadoop fs -get input_dir/*  ~/Downloads/
+   hadoop fs -get output_dir   ~/Downloads/
+   hadoop fs -get output_dir/* ~/Downloads/
 
    Input data: input.txt
  */

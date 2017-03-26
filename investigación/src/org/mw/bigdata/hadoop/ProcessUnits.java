@@ -24,8 +24,17 @@ import org.apache.hadoop.mapred.*;
    hadoop fs -put /home/hadoop/sample.txt input_dir
    hadoop fs -ls input_dir/
    hadoop fs -rmdir output_dir/
+   hadoop fs -rm -r output_dir/		# output_dir must not exist before execute the following command 
 
    hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
+
+   hadoop fs -ls output_dir/
+   hadoop fs -cat output_dir/part-00000
+   
+   hadoop fs -get input_dir    ~/Downloads/
+   hadoop fs -get input_dir/*  ~/Downloads/
+   hadoop fs -get output_dir   ~/Downloads/
+   hadoop fs -get output_dir/* ~/Downloads/
 
  * Input data: sample.txt
  */
