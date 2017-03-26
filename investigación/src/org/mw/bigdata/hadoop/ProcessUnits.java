@@ -24,12 +24,12 @@ import org.apache.hadoop.mapred.*;
    hadoop fs -put /home/hadoop/sample.txt input_dir
    hadoop fs -ls input_dir/
    hadoop fs -rmdir output_dir/
-   hadoop fs -rm -r output_dir/		# output_dir must not exist before execute the following command 
+   hadoop fs -rm -r output_dir/        # output_dir must not exist before execute the following command 
 
    hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
 
    hadoop fs -ls output_dir/
-   hadoop fs -cat output_dir/part-00000
+   hadoop fs -cat output_dir/part-r-00000
    
    hadoop fs -get input_dir    ~/Downloads/
    hadoop fs -get input_dir/*  ~/Downloads/
@@ -40,34 +40,40 @@ import org.apache.hadoop.mapred.*;
  */
 public class ProcessUnits
 {
-   //Mapper class
+   //electrical consumption - Mapper class
    public static class E_EMapper extends MapReduceBase implements
-   Mapper<LongWritable,  /*Input key Type */
-   Text,                   /*Input value Type*/
-   Text,                   /*Output key Type*/
-   IntWritable>            /*Output value Type*/
+           Mapper<LongWritable,    /*Input key Type */
+           Text,                   /*Input value Type*/
+           Text,                   /*Output key Type*/
+           IntWritable>            /*Output value Type*/
    {
       //Map function
       public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException
       {
+         System.out.println("E_EMapper: value: '" + value + "'"); // TODO - write to hadoop log
          String line = value.toString();
          String lasttoken = null;
-         StringTokenizer s = new StringTokenizer(line,"\t");
+//         StringTokenizer s = new StringTokenizer(line,"\t"); // not working for sample.txt which does not have \t
+         StringTokenizer s = new StringTokenizer(line," ");
+         System.out.println("E_EMapper: line: '" + line + "'");
+         System.out.println("E_EMapper: s.countTokens();: '" + s.countTokens() + "'\n");
+
+
          String year = s.nextToken();
-         
+
          while(s.hasMoreTokens()){
             lasttoken=s.nextToken();
          }
-         
+
          int avgprice = Integer.parseInt(lasttoken);
          output.collect(new Text(year), new IntWritable(avgprice));
       }
    }
-   
-   //Reducer class
-	
+
+   //electrical consumption - Reducer class
+
    public static class E_EReduce extends MapReduceBase implements
-   Reducer< Text, IntWritable, Text, IntWritable >
+           Reducer< Text, IntWritable, Text, IntWritable >
    {
       //Reduce function
       public void reduce(Text key, Iterator <IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException
@@ -83,28 +89,32 @@ public class ProcessUnits
          }
       }
    }
-	
-   //Main function
-	
+
+   /**
+    * hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
+    *
+    * @param args input_dir output_dir
+    * @throws Exception
+    */
    public static void main(String args[])throws Exception
    {
       JobConf conf = new JobConf(ProcessUnits.class);
-		
+
       conf.setJobName("max_eletricityunits");
-		
-      conf.setOutputKeyClass(Text.class);
-      conf.setOutputValueClass(IntWritable.class);
-		
+
       conf.setMapperClass(E_EMapper.class);
       conf.setCombinerClass(E_EReduce.class);
       conf.setReducerClass(E_EReduce.class);
-		
+
+      conf.setOutputKeyClass(Text.class);
+      conf.setOutputValueClass(IntWritable.class);
+
       conf.setInputFormat(TextInputFormat.class);
       conf.setOutputFormat(TextOutputFormat.class);
-		
+
       FileInputFormat.setInputPaths(conf, new Path(args[0]));
       FileOutputFormat.setOutputPath(conf, new Path(args[1]));
-		
+
       JobClient.runJob(conf);
    }
 }

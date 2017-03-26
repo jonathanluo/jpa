@@ -50,7 +50,7 @@ public class WordCount {
    {
       private final static IntWritable one = new IntWritable(1);
       private Text word = new Text();
-      
+
       public void map(Object key, Text value, Context context) throws IOException, InterruptedException 
       {
          StringTokenizer itr = new StringTokenizer(value.toString());
@@ -77,22 +77,29 @@ public class WordCount {
       }
    }
    
+   /**
+    * hadoop jar units.jar org.mw.bigdata.hadoop.WordCount input_dir output_dir
+    *
+    * @param args input_dir output_dir
+    * @throws Exception
+    */
    public static void main(String[] args) throws Exception 
    {
       Configuration conf = new Configuration();
       Job job = Job.getInstance(conf, "word count");
-		
+
       job.setJarByClass(WordCount.class);
+
       job.setMapperClass(TokenizerMapper.class);
       job.setCombinerClass(IntSumReducer.class);
       job.setReducerClass(IntSumReducer.class);
-		
+
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);
-		
+
       FileInputFormat.addInputPath(job, new Path(args[0]));
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
-		
+
       System.exit(job.waitForCompletion(true) ? 0 : 1);
    }
 }
