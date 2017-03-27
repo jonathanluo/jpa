@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * https://www.tutorialspoint.com/map_reduce/implementation_in_hadoop.htm
@@ -40,7 +42,9 @@ import org.apache.hadoop.mapred.*;
  */
 public class ProcessUnits
 {
-   //electrical consumption - Mapper class
+   private static final Log LOG = LogFactory.getLog(ProcessUnits.class);
+
+   // electrical consumption - Mapper class
    public static class E_EMapper extends MapReduceBase implements
            Mapper<LongWritable,    /*Input key Type */
            Text,                   /*Input value Type*/
@@ -50,14 +54,13 @@ public class ProcessUnits
       //Map function
       public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException
       {
-         System.out.println("E_EMapper: value: '" + value + "'"); // TODO - write to hadoop log
+         LOG.info("E_EMapper: value: '" + value + "'"); // TODO - write to hadoop log
          String line = value.toString();
          String lasttoken = null;
 //         StringTokenizer s = new StringTokenizer(line,"\t"); // not working for sample.txt which does not have \t
          StringTokenizer s = new StringTokenizer(line," ");
-         System.out.println("E_EMapper: line: '" + line + "'");
-         System.out.println("E_EMapper: s.countTokens();: '" + s.countTokens() + "'\n");
-
+         LOG.info("E_EMapper: line: '" + line + "'");
+         LOG.info("E_EMapper: s.countTokens();: '" + s.countTokens() + "'\n");
 
          String year = s.nextToken();
 
