@@ -7,7 +7,7 @@ hadoop fs -put /home/hadoop/sample.txt input_dir
 
 hadoop fs -rm -r output_dir/
 
-hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUints input_dir output_dir
+hadoop jar units.jar org.mw.bigdata.hadoop.ProcessUnits input_dir output_dir
 
 echo "hadoop fs -ls output_dir/"
 hadoop fs -ls output_dir/
