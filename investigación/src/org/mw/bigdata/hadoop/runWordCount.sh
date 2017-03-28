@@ -1,6 +1,3 @@
-start-dfs.sh
-start-yarn.sh
-
 hadoop fs -rm -r input_dir
 hadoop fs -mkdir -p input_dir
 hadoop fs -put /home/hadoop/input.txt input_dir

@@ -54,13 +54,12 @@ public class ProcessUnits
       //Map function
       public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException
       {
-         LOG.info("E_EMapper: value: '" + value + "'"); // TODO - write to hadoop log
+         LOG.info("map: key: '" + key + "', value: '" + value + "'"); // write to hadoop user log, e.g. /j01/srv/hadoop/logs/userlogs/application_1490675168582_0001/container_1490675168582_0001_01_000002/syslog
          String line = value.toString();
          String lasttoken = null;
 //         StringTokenizer s = new StringTokenizer(line,"\t"); // not working for sample.txt which does not have \t
          StringTokenizer s = new StringTokenizer(line," ");
-         LOG.info("E_EMapper: line: '" + line + "'");
-         LOG.info("E_EMapper: s.countTokens();: '" + s.countTokens() + "'\n");
+         LOG.info("map: line#tokens();: '" + s.countTokens() + "'\n");
 
          String year = s.nextToken();
 
@@ -69,6 +68,7 @@ public class ProcessUnits
          }
 
          int avgprice = Integer.parseInt(lasttoken);
+         LOG.info("map: output.collect( year: " + year + ", avgprice: " + avgprice +" )");
          output.collect(new Text(year), new IntWritable(avgprice));
       }
    }
@@ -83,10 +83,11 @@ public class ProcessUnits
       {
          int maxavg=30;
          int val=Integer.MIN_VALUE;
-         while (values.hasNext())
-         {
-            if((val=values.next().get())>maxavg)
-            {
+         while (values.hasNext()) {
+            val=values.next().get();
+            LOG.info("reduce: val: '" + val +"'");
+            if(val > maxavg) {
+               LOG.info("reduce: output.collect( key: " + key + ", value: " + val +" )");
                output.collect(key, new IntWritable(val));
             }
          }

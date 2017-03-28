@@ -81,3 +81,8 @@ $ hadoop fs -cat output_dir/part-00000
 1984    40
 1985    45
 
+Note: only print average value > 30 years
+      see 
+      int maxavg=30;
+      defined in PreocessUnits::reduce() line 84
+
