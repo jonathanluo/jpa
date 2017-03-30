@@ -62,13 +62,20 @@ public class ProcessUnits
          LOG.info("map: line#tokens();: '" + s.countTokens() + "'\n");
 
          String year = s.nextToken();
-
+         int i = 0;
+         int avgprice = 0;
          while(s.hasMoreTokens()){
             lasttoken=s.nextToken();
+            avgprice += Integer.valueOf(lasttoken);
+            i++;
+            LOG.info("i : " + i + ", " + lasttoken);
+            if (i >= 12 ) {
+                break;
+            }
          }
 
-         int avgprice = Integer.parseInt(lasttoken);
-         LOG.info("map: output.collect( year: " + year + ", avgprice: " + avgprice +" )");
+         avgprice = avgprice/12;
+         LOG.info("map - output.collect( year: " + year + ", avgprice: " + avgprice +" )");
          output.collect(new Text(year), new IntWritable(avgprice));
       }
    }
@@ -81,13 +88,13 @@ public class ProcessUnits
       //Reduce function
       public void reduce(Text key, Iterator <IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException
       {
-         int maxavg=30;
+         int maxavg=10;
          int val=Integer.MIN_VALUE;
          while (values.hasNext()) {
             val=values.next().get();
             LOG.info("reduce: val: '" + val +"'");
             if(val > maxavg) {
-               LOG.info("reduce: output.collect( key: " + key + ", value: " + val +" )");
+               LOG.info("reduce - output.collect( key: " + key + ", value: " + val +" )");
                output.collect(key, new IntWritable(val));
             }
          }
