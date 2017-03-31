@@ -45,20 +45,30 @@ public class ProcessUnits {
    private static final Log LOG = LogFactory.getLog(ProcessUnits.class);
 
    // electrical consumption - Mapper class
-   public static class E_EMapper extends MapReduceBase implements
-           Mapper<LongWritable,    /*Input key Type */
-           Text,                   /*Input value Type*/
-           Text,                   /*Output key Type*/
-           IntWritable>            /*Output value Type*/ {
+   /**
+    * interface Mapper<K1, V1, K2, V2>
+    *       K1    LongWritable    Input key Type 
+    *       V1    Text            Input value Type
+    *       K2    Text            Output key Type
+    *       V2    IntWritable     Output value Type
+    *   Maps a single input key/value pair into an intermediate key/value pair.
+    *
+    *   @param key the input key.
+    *   @param value the input value.
+    *   @param output collects mapped keys and values.
+    *   @param reporter facility to report progress.
+    *   void map(K1 key, V1 value, OutputCollector<K2, V2> output, Reporter reporter)
+    */
+   public static class E_EMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
       //Map function
       public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
          LOG.info("map - key: '" + key + "', value: '" + value + "'"); // write to hadoop user log, e.g. /j01/srv/hadoop/logs/userlogs/application_.../container_.../syslog
-         															  // use 'egrep.sh -R -n "map - key:" *' to search
+                                                                       // use 'egrep.sh -R -n "map - key:" *' to search
          String line = value.toString();
          String lasttoken = null;
 //         StringTokenizer s = new StringTokenizer(line,"\t"); // not working for sample.txt which does not have \t
          StringTokenizer s = new StringTokenizer(line," ");
-         LOG.info("map- line#tokens(): '" + s.countTokens() + "'\n");
+         LOG.info("map- line#tokens(): '" + s.countTokens());
 
          String year = s.nextToken();
          int i = 0;
@@ -74,7 +84,7 @@ public class ProcessUnits {
          }
 
          avgprice = avgprice/12;
-         LOG.info("map - output.collect( year: " + year + ", avgprice: " + avgprice +" )");
+         LOG.info("map - outputCollector( year: " + year + ", avgprice: " + avgprice +" )");
          output.collect(new Text(year), new IntWritable(avgprice));
       }
    }
@@ -85,13 +95,14 @@ public class ProcessUnits {
            Reducer< Text, IntWritable, Text, IntWritable > {
       //Reduce function
       public void reduce(Text key, Iterator <IntWritable> values, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+         LOG.info("reduce - key: '" + key +"'");
          int maxavg=10;
          int val=Integer.MIN_VALUE;
          while (values.hasNext()) {
             val=values.next().get();
             LOG.info("reduce - val: '" + val +"'");
             if(val > maxavg) {
-               LOG.info("reduce - output.collect( key: " + key + ", value: " + val +" )");
+               LOG.info("reduce - outputCollector( key: " + key + ", value: " + val +" )");
                output.collect(key, new IntWritable(val));
             }
          }
