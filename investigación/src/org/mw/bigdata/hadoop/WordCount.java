@@ -19,6 +19,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * https://www.tutorialspoint.com/map_reduce/map_reduce_combiners.htm
+ * https://hadoop.apache.org/docs/r2.7.3/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html
 
    cd /home/hadoop
    mkdir units
