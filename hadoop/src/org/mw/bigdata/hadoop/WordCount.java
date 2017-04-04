@@ -123,7 +123,8 @@ public class WordCount {
       FileInputFormat.addInputPath(job, new Path(args[0]));
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
+      boolean succeed = job.waitForCompletion(true);
       System.out.println("done");
-      System.exit(job.waitForCompletion(true) ? 0 : 1);
+      System.exit(succeed ? 0 : 1);
    }
 }

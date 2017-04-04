@@ -134,5 +134,6 @@ public class ProcessUnits {
       FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
       JobClient.runJob(conf);
+      System.out.println("done");
    }
 }
