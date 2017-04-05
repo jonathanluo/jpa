@@ -25,5 +25,7 @@
 	<classpathentry kind="lib" path="/j01/srv/hadoop-2.7.3/share/hadoop/yarn/hadoop-yarn-api-2.7.3.jar"/>
 	<classpathentry kind="lib" path="/j01/srv/hadoop-2.7.3/share/hadoop/common/lib/httpclient-4.2.5.jar"/>
 	<classpathentry kind="lib" path="/j01/srv/hadoop-2.7.3/share/hadoop/common/lib/httpcore-4.2.5.jar"/>
+	<classpathentry kind="lib" path="/j01/srv/hadoop-2.7.3/share/hadoop/common/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="/j01/srv/hadoop-2.7.3/share/hadoop/mapreduce/lib-examples/hsqldb-2.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
