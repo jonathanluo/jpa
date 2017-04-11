@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="Ch01"/>
+	<classpathentry kind="src" path="Lib"/>
+	<classpathentry kind="src" path="Ch02"/>
+	<classpathentry kind="src" path="Ch03"/>
+	<classpathentry kind="src" path="Ch04"/>
+	<classpathentry kind="src" path="Ch05"/>
+	<classpathentry kind="src" path="Ch07"/>
+	<classpathentry kind="src" path="Ch08"/>
+	<classpathentry kind="src" path="Ch09"/>
+	<classpathentry kind="src" path="Ch10"/>
+	<classpathentry kind="src" path="Ch11"/>
+	<classpathentry kind="src" path="Ch18"/>
+	<classpathentry kind="src" path="Ch19"/>
+	<classpathentry kind="src" path="Ch20"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
