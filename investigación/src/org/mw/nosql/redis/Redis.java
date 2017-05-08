@@ -1,6 +1,11 @@
 package org.mw.nosql.redis;
 import redis.clients.jedis.Jedis; 
 
+/**
+ * https://www.tutorialspoint.com/redis/redis_java.htm
+ * https://mvnrepository.com/artifact/redis.clients/jedis/2.9.0
+ *
+ */
 public class Redis { 
    public static void main(String[] args) { 
       //Connecting to Redis server on localhost 
