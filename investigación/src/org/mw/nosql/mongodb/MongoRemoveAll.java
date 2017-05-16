@@ -1,6 +1,10 @@
 package org.mw.nosql.mongodb;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+
+import java.util.Arrays;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -19,36 +23,35 @@ public class MongoRemoveAll {
 
       try{
 
-         // To connect to mongodb server
-         MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+		String user = "dcfg";
+		char[] pwd = "dconfig".toCharArray();
+		String database = "test";
+		MongoCredential credential = MongoCredential.createCredential(user, database, pwd); //createScramSha1Credential
+		
+		MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 27017), Arrays.asList(credential));
+		DB db = mongoClient.getDB( "test" );
+		System.out.println("Connect to database successfully");
 
-         // Now connect to your databases
-         DB db = mongoClient.getDB( "test" ); //MongoDatabase db = mongoClient.getDatabase( "test" );
-         System.out.println("Connect to database successfully");
+        DBCollection coll = db.getCollection("mycol");
+        System.out.println("Collection mycol selected successfully");
 
-//         boolean auth = db.authenticate(myUserName, myPassword);
-//         System.out.println("Authentication: "+auth);   
+        // show documents before update
+        System.out.println("================= show documents before removeAll =================");
+        DBCursor cursor = coll.find();
+        printDocuments(cursor);
 
-         DBCollection coll = db.getCollection("mycol");
-         System.out.println("Collection mycol selected successfully");
+        // perform the updates
+        cursor = coll.find();
+        while (cursor.hasNext()) { 
+           DBObject dbObj = cursor.next();
+           coll.remove(dbObj); 
+        }
 
-         // show documents before update
-         System.out.println("================= show documents before removeAll =================");
-         DBCursor cursor = coll.find();
-         printDocuments(cursor);
-
-         // perform the updates
-         cursor = coll.find();
-         while (cursor.hasNext()) { 
-            DBObject dbObj = cursor.next();
-            coll.remove(dbObj); 
-         }
-
-         System.out.println("Document updated successfully");
-         System.out.println("================= show documents after removeAll =================");
-         // show documents after update
-         cursor = coll.find();
-         printDocuments(cursor);
+        System.out.println("Document updated successfully");
+        System.out.println("================= show documents after removeAll =================");
+        // show documents after update
+        cursor = coll.find();
+        printDocuments(cursor);
 
       }catch(Exception e){
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );

@@ -6,9 +6,11 @@ package org.mw.nosql.mongodb;
  * mongoimport --db test --collection restaurants --drop --file ~/Downloads/primer-dataset.json
  *
  * https://docs.mongodb.com/getting-started/shell/client/
- * start   : mymongo.sh
- * shutdown: mymongo-shutdown.sh
- * console : mongo
+ * cd /j01/srv/mymongodb/bin
+ * start   : mymongo
+ * shutdown: mymongo-shutdown
+ * console : mongo  -u "admin" -p "*" --authenticationDatabase admin
+ *           mongo  -u "dcfg"  -p "*" --authenticationDatabase test
  *
  */
 public class Mongo {
