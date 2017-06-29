@@ -1,5 +1,0 @@
-What do you mean by Object
-What is Java Virtual Machine
-How to create Java Object
-How Java enabled High Performance
-
